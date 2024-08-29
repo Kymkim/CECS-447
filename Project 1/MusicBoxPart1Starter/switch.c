@@ -13,9 +13,11 @@
 // Inputs: None
 // Outputs: None
 void Switch_Init(void){ 
+	
 }
 
 // ISR for PORTF
 void GPIOPortF_Handler(void){
+	
 }
 

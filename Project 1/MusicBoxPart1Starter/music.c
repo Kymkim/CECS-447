@@ -62,11 +62,13 @@ NTyp Score_Tab[][MAX_NOTES] = {
 // play the current song once
 void play_a_song(void)
 {
+
 }
 
 // Move to the next song
 void next_song(void)
 {
+	
 }
 
 // check to see if the music is on or not
@@ -78,17 +80,21 @@ uint8_t is_music_on(void)
 // turn off the music
 void turn_off_music(void)
 {
+	
 }
 
 // turn on the music
 void turn_on_music(void)
 {
+	
 }
 
 // Initialize music output pin:
 // Make PA3 an output to the speaker, 
 // enable digital I/O, ensure alt. functions off
-void Music_Init(void){ 
+void Music_Init(void)
+{ 
+		
 }
 
 // Subroutine to wait 0.1 sec

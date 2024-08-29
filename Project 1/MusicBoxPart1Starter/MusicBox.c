@@ -29,6 +29,8 @@ int main(void){
 	SysTick_Init();
   Switch_Init();
   EnableInterrupts();  // SysTick uses interrupts
+	
+	SysTick_start();
   
   while(1){
     if (is_music_on()) {
