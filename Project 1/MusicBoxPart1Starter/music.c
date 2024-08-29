@@ -37,7 +37,8 @@ const uint32_t Tone_Tab[] =
 #define G6 4+2*7
 
 #define PAUSE 255				// assume there are less than 255 tones used in any song
-#define MAX_NOTES 50  // assume maximum number of notes in any song is 100. You can change this value if you add a long song.
+//#define MAX_NOTES 50  // assume maximum number of notes in any song is 100. You can change this value if you add a long song.
+#define MAX_NOTES 255
  
 // doe ray mi fa so la ti 
 // C   D   E  F  G  A  B
@@ -50,25 +51,30 @@ NTyp Score_Tab[][MAX_NOTES] = {
 // pause so   so   so'  mi'  doe' ti   la
    PAUSE,4,  G5,2,G5,2,G6,4,E6,4,C6,4,B5,4,A5,8, 
 // pause fa'  fa'   mi'  doe' ray' doe' stop
-	 PAUSE,4,  F6,2,F6,2, E6,4,C6,4,D6,4,C6,8,0,0}
+	 PAUSE,4,  F6,2,F6,2, E6,4,C6,4,D6,4,C6,8,0,0},
 	
-// score table for Mary Had A Little Lamb
 
+	 // score table for Mary Had A Little Lamb
+{E5, 4, D5, 4, C5, 4, D5, 4, E5, 4, E5, 4, E5, 8, 
+ D5, 4, D5, 4, D5, 8, E5, 4, G5, 4, G5, 8,
+ E5, 4, D5, 4, C5, 4, D5, 4, E5, 4, E5, 4, E5, 8, 
+ D5, 4, D5, 4, E5, 4, D5, 4, C5, 8, 0, 0 },
 
 // score table for Twinkle Twinkle Little Stars
+{C5,4,C5,4,G5,4,G5,4,A5,4,A5,4,G5,8,F5,4,F5,4,E5,4,E5,4,D5,4,D5,4,C5,8, 
+ G5,4,G5,4,F5,4,F5,4,E5,4,E5,4,D5,8,G5,4,G5,4,F5,4,F5,4,E5,4,E5,4,D5,8, 
+ C5,4,C5,4,G5,4,G5,4,A5,4,A5,4,G5,8,F5,4,F5,4,E5,4,E5,4,D5,4,D5,4,C5,8,0,0}
 };
 
 
 // play the current song once
 void play_a_song(void)
 {
-
 }
 
 // Move to the next song
 void next_song(void)
 {
-	
 }
 
 // check to see if the music is on or not
@@ -80,21 +86,25 @@ uint8_t is_music_on(void)
 // turn off the music
 void turn_off_music(void)
 {
-	
 }
 
 // turn on the music
 void turn_on_music(void)
 {
-	
 }
 
 // Initialize music output pin:
 // Make PA3 an output to the speaker, 
 // enable digital I/O, ensure alt. functions off
-void Music_Init(void)
-{ 
+void Music_Init(void){
+  SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R0; // activate port A
+	while ((SYSCTL_RCGCGPIO_R&SYSCTL_RCGCGPIO_R0)!=SYSCTL_RCGCGPIO_R0){}
 		
+  GPIO_PORTA_DIR_R |= 0x08;             // make PF2 out (built-in LED)
+  GPIO_PORTA_AFSEL_R &= ~0x08;          // disable alt funct on PF2
+  GPIO_PORTA_DEN_R |= 0x08;             // enable digital I/O on PF2
+  GPIO_PORTA_PCTL_R &= ~0x0000F000;     // configure PA3 to be GPIO
+  GPIO_PORTA_AMSEL_R &= ~ 0x08;               // disable analog functionality on PF	
 }
 
 // Subroutine to wait 0.1 sec
@@ -109,3 +119,5 @@ void Delay(void){
 		time--;
   }
 }
+
+
