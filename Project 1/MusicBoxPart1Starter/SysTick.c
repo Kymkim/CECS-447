@@ -8,7 +8,7 @@
 #include <stdint.h>
 
 // TODO: Define the bit address for PA3 which connects to the speaker.
-#define SPEAKER (*((volatile unsigned long *)0x40004010))
+#define SPEAKER (*((volatile unsigned long *)0x400043FC))
 
 // Initialize SysTick with interrupt priority 2. Do not start it.
 void SysTick_Init(void){
@@ -42,5 +42,5 @@ void SysTick_Set_Current_Note(uint32_t n_value)
 // stop systick timer, toggle speaker output, update reload value with current note reload value, 
 // clear the CURRENT register and restart systick timer.
 void SysTick_Handler(void){
-	SPEAKER ^= 0x1;
+	SPEAKER ^= 0x08;
 }

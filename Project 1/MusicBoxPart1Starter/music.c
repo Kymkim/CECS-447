@@ -39,6 +39,8 @@ const uint32_t Tone_Tab[] =
 #define PAUSE 255				// assume there are less than 255 tones used in any song
 //#define MAX_NOTES 50  // assume maximum number of notes in any song is 100. You can change this value if you add a long song.
 #define MAX_NOTES 255
+
+uint8_t CURRENT = 0;
  
 // doe ray mi fa so la ti 
 // C   D   E  F  G  A  B
@@ -70,11 +72,21 @@ NTyp Score_Tab[][MAX_NOTES] = {
 // play the current song once
 void play_a_song(void)
 {
+  for(int i = 0; i < MAX_NOTES; i++){
+    NTyp note = Score_Tab[CURRENT][i];
+		NVIC_ST_RELOAD_R = note.tone_index;
+		int count = 0;
+		while(count < note.delay){
+			Delay();
+			count += 1;
+		}
+  }
 }
 
 // Move to the next song
 void next_song(void)
 {
+  CURRENT = (CURRENT+1)%3;
 }
 
 // check to see if the music is on or not
@@ -86,11 +98,13 @@ uint8_t is_music_on(void)
 // turn off the music
 void turn_off_music(void)
 {
+  SysTick_stop();
 }
 
 // turn on the music
 void turn_on_music(void)
 {
+  SysTick_start();
 }
 
 // Initialize music output pin:
@@ -99,7 +113,7 @@ void turn_on_music(void)
 void Music_Init(void){
   SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R0; // activate port A
 	while ((SYSCTL_RCGCGPIO_R&SYSCTL_RCGCGPIO_R0)!=SYSCTL_RCGCGPIO_R0){}
-		
+
   GPIO_PORTA_DIR_R |= 0x08;             // make PF2 out (built-in LED)
   GPIO_PORTA_AFSEL_R &= ~0x08;          // disable alt funct on PF2
   GPIO_PORTA_DEN_R |= 0x08;             // enable digital I/O on PF2
