@@ -99,6 +99,7 @@ uint8_t is_music_on(void)
 void turn_off_music(void)
 {
   SysTick_stop();
+	CURRENT = 0;
 }
 
 // turn on the music
