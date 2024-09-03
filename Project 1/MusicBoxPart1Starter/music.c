@@ -11,6 +11,8 @@
 #include "SysTick.h"
 #include <stdint.h>
 
+unsigned char playing = 0;
+
 void Delay(void);
 
 // initail values for piano major notes: assume SysTick clock is 16MHz.
@@ -72,40 +74,60 @@ NTyp Score_Tab[][MAX_NOTES] = {
 // play the current song once
 void play_a_song(void)
 {
-  for(int i = 0; i < MAX_NOTES; i++){
-    NTyp note = Score_Tab[CURRENT][i];
-		NVIC_ST_RELOAD_R = note.tone_index;
-		int count = 0;
-		while(count < note.delay){
-			Delay();
-			count += 1;
+	
+	//For the loops
+	unsigned char i=0;
+	unsigned char j=0;
+	
+	while((i < MAX_NOTES) && (is_music_on())){
+		NTyp curr_note = Score_Tab[CURRENT][i];
+		
+		unsigned char note = curr_note.tone_index;
+		
+		//If note is a rest
+		if(note == PAUSE){
+			SysTick_stop(); //Stop the systick timer...
+		}else{
+			SysTick_Set_Current_Note(Tone_Tab[note]);
+		  SysTick_start();
 		}
-  }
+		
+		//Hold note
+		for(j=0; j<curr_note.delay; j++){
+				Delay();
+		}
+	
+		//Loop Updates
+		i++;
+	}
+	
+	turn_off_music();
 }
 
 // Move to the next song
 void next_song(void)
 {
-  CURRENT = (CURRENT+1)%3;
+	CURRENT = (CURRENT+1)%3;
 }
 
 // check to see if the music is on or not
 uint8_t is_music_on(void)
 {
-  return 0;
+	return playing;
 }
 
 // turn off the music
 void turn_off_music(void)
 {
   SysTick_stop();
-	CURRENT = 0;
+	playing = 0;
 }
 
 // turn on the music
 void turn_on_music(void)
 {
   SysTick_start();
+	playing = 1;
 }
 
 // Initialize music output pin:

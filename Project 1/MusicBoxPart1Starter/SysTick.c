@@ -12,29 +12,29 @@
 
 // Initialize SysTick with interrupt priority 2. Do not start it.
 void SysTick_Init(void){
-	
-	NVIC_ST_CTRL_R		=	0x00000000; 				//Disable SysTick Timer
-	NVIC_ST_RELOAD_R 	= NVIC_ST_RELOAD_M; 	//Temporary Reload valie
-	NVIC_ST_CURRENT_R =	0x00000000;					//Reset current value
-	NVIC_SYS_PRI3_R 	=	(NVIC_SYS_PRI3_R&0x1FFFFFFF) | 0x4000000;
-	
+	NVIC_ST_CTRL_R = 0;	//Disable SysTick
+	NVIC_SYS_PRI3_R = (NVIC_SYS_PRI3_R&0x00FFFFFF) | 0x40000000; //Priority 2
+	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_CLK_SRC+NVIC_ST_CTRL_INTEN;
 }
 
 // Start running systick timer
 void SysTick_start(void)
 {
-	NVIC_ST_CTRL_R	|= 0x07;				
+	NVIC_ST_CTRL_R	|= NVIC_ST_CTRL_ENABLE;	
 }
 // Stop running systick timer
 void SysTick_stop(void)
 {
-	NVIC_ST_CTRL_R		&= ~(0x07);				
+	NVIC_ST_CTRL_R	&= ~NVIC_ST_CTRL_ENABLE;				
 }
 
 // update the reload value for current note with with n_value
 void SysTick_Set_Current_Note(uint32_t n_value)
 {
-	NVIC_ST_RELOAD_R = n_value;
+	//SysTick_stop();
+	NVIC_ST_RELOAD_R = n_value-1;
+	NVIC_ST_CURRENT_R =	0x00000000;		
+	//SysTick_start();
 }
 
 // Interrupt service routine, 
@@ -42,5 +42,8 @@ void SysTick_Set_Current_Note(uint32_t n_value)
 // stop systick timer, toggle speaker output, update reload value with current note reload value, 
 // clear the CURRENT register and restart systick timer.
 void SysTick_Handler(void){
-	SPEAKER ^= 0x08;
+	//NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE; //Disable SYSTICK
+	SPEAKER ^= 0x08;	//Toggle bit 
+	NVIC_ST_CURRENT_R = 0;			//Any write clears current count
+	//NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE; //Activate SYSTICK
 }

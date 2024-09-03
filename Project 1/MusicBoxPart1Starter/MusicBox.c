@@ -30,15 +30,15 @@ int main(void){
   Switch_Init();
   EnableInterrupts();  // SysTick uses interrupts
 	
-	SysTick_start();
-  
   while(1){
+		
     if (is_music_on()) {
 		  play_a_song();
     }
     else {
       WaitForInterrupt();
     }
+		
   }
 }
 
