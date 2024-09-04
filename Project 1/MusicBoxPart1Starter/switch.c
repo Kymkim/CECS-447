@@ -51,9 +51,7 @@ void GPIOPortF_Handler(void){
 		}
 	}else{ //Activation
 		GPIO_PORTF_ICR_R = 0x01;
-		turn_off_music();
 		next_song();
-		turn_on_music();
 	}
 }
 

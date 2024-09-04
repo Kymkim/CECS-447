@@ -46,7 +46,18 @@ uint8_t CURRENT = 0;
  
 // doe ray mi fa so la ti 
 // C   D   E  F  G  A  B
-NTyp Score_Tab[][MAX_NOTES] = {  
+NTyp Score_Tab[][MAX_NOTES] = {
+
+// score table for Mary Had A Little Lamb
+{E5, 4, D5, 4, C5, 4, D5, 4, E5, 4, E5, 4, E5, 8, 
+ D5, 4, D5, 4, D5, 8, E5, 4, G5, 4, G5, 8,
+ E5, 4, D5, 4, C5, 4, D5, 4, E5, 4, E5, 4, E5, 8, 
+ D5, 4, D5, 4, E5, 4, D5, 4, C5, 8, 0, 0 },
+
+ // score table for Twinkle Twinkle Little Stars
+{C5,4,C5,4,G5,4,G5,4,A5,4,A5,4,G5,8,F5,4,F5,4,E5,4,E5,4,D5,4,D5,4,C5,8, 
+ G5,4,G5,4,F5,4,F5,4,E5,4,E5,4,D5,8,G5,4,G5,4,F5,4,F5,4,E5,4,E5,4,D5,8, 
+ C5,4,C5,4,G5,4,G5,4,A5,4,A5,4,G5,8,F5,4,F5,4,E5,4,E5,4,D5,4,D5,4,C5,8,0,0},
 // score table for Happy Birthday
 {//so   so   la   so   doe' ti
    G5,2,G5,2,A5,4,G5,4,C6,4,B5,4,
@@ -55,19 +66,8 @@ NTyp Score_Tab[][MAX_NOTES] = {
 // pause so   so   so'  mi'  doe' ti   la
    PAUSE,4,  G5,2,G5,2,G6,4,E6,4,C6,4,B5,4,A5,8, 
 // pause fa'  fa'   mi'  doe' ray' doe' stop
-	 PAUSE,4,  F6,2,F6,2, E6,4,C6,4,D6,4,C6,8,0,0},
-	
+	 PAUSE,4,  F6,2,F6,2, E6,4,C6,4,D6,4,C6,8,0,0}
 
-	 // score table for Mary Had A Little Lamb
-{E5, 4, D5, 4, C5, 4, D5, 4, E5, 4, E5, 4, E5, 8, 
- D5, 4, D5, 4, D5, 8, E5, 4, G5, 4, G5, 8,
- E5, 4, D5, 4, C5, 4, D5, 4, E5, 4, E5, 4, E5, 8, 
- D5, 4, D5, 4, E5, 4, D5, 4, C5, 8, 0, 0 },
-
-// score table for Twinkle Twinkle Little Stars
-{C5,4,C5,4,G5,4,G5,4,A5,4,A5,4,G5,8,F5,4,F5,4,E5,4,E5,4,D5,4,D5,4,C5,8, 
- G5,4,G5,4,F5,4,F5,4,E5,4,E5,4,D5,8,G5,4,G5,4,F5,4,F5,4,E5,4,E5,4,D5,8, 
- C5,4,C5,4,G5,4,G5,4,A5,4,A5,4,G5,8,F5,4,F5,4,E5,4,E5,4,D5,4,D5,4,C5,8,0,0}
 };
 
 unsigned char note_index=0;
@@ -105,8 +105,6 @@ void play_a_song(void)
 			note_index = 0;
 		}
 	}
-	
-	turn_off_music();
 }
 
 // Move to the next song
@@ -127,6 +125,8 @@ void turn_off_music(void)
 {
   SysTick_stop();
 	playing = 0;
+	CURRENT = 0;
+	note_index = 0;
 }
 
 // turn on the music
@@ -134,6 +134,8 @@ void turn_on_music(void)
 {
   SysTick_start();
 	playing = 1;
+	CURRENT = 0;
+	note_index = 0;
 }
 
 // Initialize music output pin:
