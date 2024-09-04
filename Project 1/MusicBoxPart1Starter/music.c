@@ -70,17 +70,17 @@ NTyp Score_Tab[][MAX_NOTES] = {
  C5,4,C5,4,G5,4,G5,4,A5,4,A5,4,G5,8,F5,4,F5,4,E5,4,E5,4,D5,4,D5,4,C5,8,0,0}
 };
 
+unsigned char note_index=0;
 
 // play the current song once
 void play_a_song(void)
 {
 	
 	//For the loops
-	unsigned char i=0;
 	unsigned char j=0;
 	
-	while((i < MAX_NOTES) && (is_music_on())){
-		NTyp curr_note = Score_Tab[CURRENT][i];
+	while((note_index < MAX_NOTES) && (is_music_on())){
+		NTyp curr_note = Score_Tab[CURRENT][note_index];
 		
 		unsigned char note = curr_note.tone_index;
 		
@@ -98,7 +98,12 @@ void play_a_song(void)
 		}
 	
 		//Loop Updates
-		i++;
+		note_index++;
+		
+		if(note == 0){
+			SysTick_stop();
+			note_index = 0;
+		}
 	}
 	
 	turn_off_music();
@@ -108,6 +113,7 @@ void play_a_song(void)
 void next_song(void)
 {
 	CURRENT = (CURRENT+1)%3;
+	note_index = 0;
 }
 
 // check to see if the music is on or not
