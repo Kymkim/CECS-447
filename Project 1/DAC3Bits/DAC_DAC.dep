@@ -1,0 +1,11 @@
+Dependencies for Project 'DAC', Target 'DAC': (DO NOT MODIFY !)
+CompilerVersion: 5060960::V5.06 update 7 (build 960)::.\ARMCC
+F (.\startup.s)(0x57020C08)(--cpu Cortex-M4 --pd "__EVAL SETA 1" -g --apcs=interwork -I.\RTE\_DAC-IC:\Users\COE\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\COE\AppData\Local\Arm\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123--pd "__UVISION_VERSION SETA 533" --pd "_RTE_ SETA 1" --pd "TM4C123GH6PM SETA 1" --pd "_RTE_ SETA 1"--list .\startup.lst --xref -o .\startup.o --depend .\startup.d)
+F (.\Sound.c)(0x61393E01)(--c99 -c --cpu Cortex-M4 -D__EVAL -g -O0 --apcs=interwork --split_sections --signed_chars -I .. -I ..\..\..-I.\RTE\_DAC-IC:\Users\COE\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\COE\AppData\Local\Arm\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-D__UVISION_VERSION="533" -D_RTE_ -DTM4C123GH6PM -D_RTE_ -Drvmdk -DPART_LM4F120H5QR-o .\sound.o --omf_browse .\sound.crf --depend .\sound.d)
+I (tm4c123gh6pm.h)(0x51D4D322)
+F (.\SwitchLed.c)(0x5FFE1B90)(--c99 -c --cpu Cortex-M4 -D__EVAL -g -O0 --apcs=interwork --split_sections --signed_chars -I .. -I ..\..\..-I.\RTE\_DAC-IC:\Users\COE\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\COE\AppData\Local\Arm\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-D__UVISION_VERSION="533" -D_RTE_ -DTM4C123GH6PM -D_RTE_ -Drvmdk -DPART_LM4F120H5QR-o .\switchled.o --omf_browse .\switchled.crf --depend .\switchled.d)
+I (tm4c123gh6pm.h)(0x51D4D322)
+F (.\DAC_HappyBirthday.c)(0x613FBF08)(--c99 -c --cpu Cortex-M4 -D__EVAL -g -O0 --apcs=interwork --split_sections --signed_chars -I .. -I ..\..\..-I.\RTE\_DAC-IC:\Users\COE\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\COE\AppData\Local\Arm\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-D__UVISION_VERSION="533" -D_RTE_ -DTM4C123GH6PM -D_RTE_ -Drvmdk -DPART_LM4F120H5QR-o .\dac_happybirthday.o --omf_browse .\dac_happybirthday.crf --depend .\dac_happybirthday.d)
+I (tm4c123gh6pm.h)(0x51D4D322)
+I (Sound.h)(0x5FFE1E3D)
+I (SwitchLed.h)(0x5FFE1C03)
