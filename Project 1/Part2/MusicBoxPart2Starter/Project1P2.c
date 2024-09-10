@@ -26,6 +26,7 @@ int main(void){
   DAC_Init();        // Port B 
 	ButtonLed_Init();  // Port F
   PianoKeys_Init();  // Port D
+	Sound_Init();
 	EnableInterrupts();
 	
   while(1){

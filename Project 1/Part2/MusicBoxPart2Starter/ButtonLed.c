@@ -18,14 +18,34 @@
 #define NVIC_EN0_PORTD 0x00000008  // enable PORTD edge interrupt
 
 // Golbals
-volatile uint8_t curr_mode=PIANO;  // 0: piano mode, 1: auto-play mode
+
 
 //---------------------Switch_Init---------------------
 // initialize onboard switch and LED interface
 // Input: none
 // Output: none 
 void ButtonLed_Init(void){ 
+	volatile unsigned long  delay;
+  SYSCTL_RCGC2_R |= 0x00000020;     // 1) activate clock for Port F
+  delay = SYSCTL_RCGC2_R;           // allow time for clock to start
+  GPIO_PORTF_LOCK_R = 0x4C4F434B;   // 2) unlock GPIO Port F
+  GPIO_PORTF_CR_R = 0x1F;           // allow changes to PF4-0
+  // only PF0 needs to be unlocked, other bits can't be locked
+  GPIO_PORTF_AMSEL_R &= ~0x1F;        // 3) disable analog on PF
+  GPIO_PORTF_PCTL_R &= ~0x000FFFFF;   // 4) PCTL GPIO on PF4-0
+  GPIO_PORTF_DIR_R |= 0x0E;          // 5) PF4,PF0 in, PF3-1 out
+  GPIO_PORTF_DIR_R &= ~0x11;          // 5) PF4,PF0 in, PF3-1 out
+  GPIO_PORTF_AFSEL_R &= ~0x1F;        // 6) disable alt funct on PF7-0
+  GPIO_PORTF_PUR_R |= 0x11;          // enable pull-up on PF0 and PF4
+  GPIO_PORTF_DEN_R |= 0x1F;          // 7) enable digital I/O on PF4-0
+	GPIO_PORTF_IS_R &= ~0x11;     				//  PF4,PF0 is edge-sensitive
+  GPIO_PORTF_IBE_R &= ~0x11;    				//  PF4,PF0 is not both edges
+  GPIO_PORTF_IEV_R &= ~0x11;    				//  PF4,PF0 falling edge event
+  GPIO_PORTF_ICR_R = 0x11;      				//  Clear flags 4,0
+  GPIO_PORTF_IM_R |= 0x11;      				//  Arm interrupt on PF4,PF0
 	
+  NVIC_PRI7_R = (NVIC_PRI7_R&0xFF1FFFFF)|0x00A00000;	// priority 5
+  NVIC_EN0_R |= NVIC_EN0_PORTF;      									//  Enable interrupt 30 in NVIC
 }
 
 //---------------------PianoKeys_Init---------------------
@@ -34,11 +54,27 @@ void ButtonLed_Init(void){
 // No need to unlock. Only PD7 needs to be unlocked.
 // Input: none
 // Output: none 
-void PianoKeys_Init(void){ 
+void PianoKeys_Init(void){ volatile unsigned long  delay;
+  SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOD;     // 1) activate clock for Port D
+  delay = SYSCTL_RCGC2_R;           // allow time for clock to start
+  GPIO_PORTD_CR_R = 0x0F;           // allow changes to PD0-3
+  GPIO_PORTD_AMSEL_R &= ~0x0F;        // 3) disable analog on PD
+  GPIO_PORTD_PCTL_R &= ~0x0000FFFF;   // 4) PCTL GPIO on PF4-0
+  GPIO_PORTD_DIR_R &= ~0x0F;          // 5) PD in
+  GPIO_PORTD_AFSEL_R &= ~0x0F;        // 6) disable alt funct on PD
+  GPIO_PORTD_PUR_R |= 0x0F;          // enable pull-up on PD0-3
+  GPIO_PORTD_DEN_R |= 0x0F;          // 7) enable digital I/O on PD
+	
+	GPIO_PORTD_IS_R &= ~0x0F;     				//  PF4,PF0 is edge-sensitive
+  GPIO_PORTD_IBE_R &= ~0x0F;    				//  PF4,PF0 is not both edges
+  GPIO_PORTD_IEV_R &= ~0x0F;    				//  PF4,PF0 falling edge event
+  GPIO_PORTD_ICR_R = 0x0F;      				//  Clear flags 4,0
+  GPIO_PORTD_IM_R |= 0x0F;      				//  Arm interrupt on PF4,PF0
+	
+  NVIC_PRI0_R = (NVIC_PRI0_R&0x1FFFFFFF)|0xA0000000;	
+  NVIC_EN0_R |= NVIC_EN0_PORTD;      									//  Enable interrupt 30 in NVIC
 }
 
 
-uint8_t get_current_mode(void)
-{
-	return curr_mode;
-}
+
+
