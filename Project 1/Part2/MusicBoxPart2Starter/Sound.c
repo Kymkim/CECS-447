@@ -13,7 +13,7 @@
 #include "ButtonLed.h"
 
 // define bit addresses for Port B bits 0,1,2,3,4,5 => DAC inputs 
-#define DAC (*((volatile unsigned long *)0x400043F0 ))   
+#define DAC (*((volatile unsigned long *)0x400053F0 ))   
 
 unsigned char Index;
 	
@@ -79,15 +79,15 @@ NTyp playlist[][MAX_NOTES] =
 	 SILENCE,4,  F6,2,F6,2, E6,4,C6,4,D6,4,C6,8,0,0},
 
 // Mary Had A Little Lamb
-{E6, 4, D6, 4, C6, 4, D6, 4, E6, 4, E6, 4, E6, 8, 
- D6, 4, D6, 4, D6, 8, E6, 4, G6, 4, G6, 8,
- E6, 4, D6, 4, C6, 4, D6, 4, E6, 4, E6, 4, E6, 8, 
- D6, 4, D6, 4, E6, 4, D6, 4, C6, 8, 0, 0 },
+{E5, 4, D5, 4, C5, 4, D5, 4, E5, 4, E5, 4, E5, 8, 
+ D5, 4, D5, 4, D5, 8, E5, 4, G5, 4, G5, 8,
+ E5, 4, D5, 4, C5, 4, D5, 4, E5, 4, E5, 4, E5, 8, 
+ D5, 4, D5, 4, E5, 4, D5, 4, C5, 8, 0, 0 },
 
 // Twinkle Twinkle Little Stars
-{C6,4,C6,4,G6,4,G6,4,A6,4,A6,4,G6,8,F6,4,F6,4,E6,4,E6,4,D6,4,D6,4,C6,8, 
- G6,4,G6,4,F6,4,F6,4,E6,4,E6,4,D6,8,G6,4,G6,4,F6,4,F6,4,E6,4,E6,4,D6,8, 
- C6,4,C6,4,G6,4,G6,4,A6,4,A6,4,G6,8,F6,4,F6,4,E6,4,E6,4,D6,4,D6,4,C6,8,0,0}
+{C5,4,C5,4,G5,4,G5,4,A5,4,A5,4,G5,8,F5,4,F5,4,E5,4,E5,4,D5,4,D5,4,C5,8, 
+ G5,4,G5,4,F5,4,F5,4,E5,4,E5,4,D5,8,G5,4,G5,4,F5,4,F5,4,E5,4,E5,4,D5,8, 
+ C5,4,C5,4,G5,4,G5,4,A5,4,A5,4,G5,8,F5,4,F5,4,E5,4,E5,4,D5,4,D5,4,C5,8,0,0}
 };
 
 
@@ -142,7 +142,7 @@ void Sound_stop(void)
 void SysTick_Handler(void){
 	GPIO_PORTF_DATA_R ^= 0x08;     // toggle PF3, debugging
   Index = (Index+1)&0x3F;        // 16 samples for each period
-	// Index = (Index+1)%16;
+	//Index = (Index+1)%16;
 	DAC = SineWave[Index]; // output to DAC: 3-bit data
 }
 
@@ -154,49 +154,22 @@ void GPIOPortF_Handler(void){
 			if(get_current_mode()==PIANO){
 				octave=(octave+1)%NUM_OCT;
 			}else{
+				Sound_stop();
 				curr_song=(curr_song+1)%NUM_SONGS;
+				curr_note = 0;
 			}
-			GPIO_PORTF_ICR_R = 0x10;
+			GPIO_PORTF_ICR_R = 0x01;
 	}
 	if(GPIO_PORTF_RIS_R&0x10){
-		curr_mode^=0x1;
+		if(get_current_mode()==PIANO){
+			curr_mode = AUTO_PLAY;
+			curr_note = 0;
+			curr_song = 0;
+		}else{
+			curr_mode = PIANO;
+		}
+		GPIO_PORTF_ICR_R = 0x10;
 	}
-}
-
-// Dependency: Requires PianoKeys_Init to be called first, assume at any time only one key is pressed
-// Inputs: None
-// Outputs: None
-// Description: Rising/Falling edge interrupt on PD6-PD0. Whenever any 
-// button is pressed, or released the interrupt will trigger.
-void GPIOPortD_Handler(void){  
-  // simple debouncing code: generate 20ms to 30ms delay
-	for (uint32_t time=0;time<72724;time++) {}
-  if(get_current_mode()==PIANO){
-		if(GPIO_PORTD_RIS_R&0x01){
-			Sound_Start(tonetab[((octave-2)*7)]/NUM_SAMPLES);
-			GPIO_PORTD_ICR_R = 0x01;
-		}
-		if(GPIO_PORTD_RIS_R&0x02){
-			Sound_Start(tonetab[1+((octave-2)*7)]/NUM_SAMPLES);
-			GPIO_PORTD_ICR_R = 0x02;
-		}
-		if(GPIO_PORTD_RIS_R&0x03){
-			Sound_Start(tonetab[2+((octave-2)*7)]/NUM_SAMPLES);
-			GPIO_PORTD_ICR_R = 0x03;
-		}
-		if(GPIO_PORTD_RIS_R&0x04){
-			Sound_Start(tonetab[3+((octave-2)*7)]/NUM_SAMPLES);
-			GPIO_PORTD_ICR_R = 0x04;
-		}
-	}else{
-			GPIO_PORTD_ICR_R = 0x0F;
-	}
-}
-
-uint16_t counter = 0;
-
-uint8_t is_music_on(void){
-  return music_playing;
 }
 
 // Subroutine to wait 0.1 sec
@@ -212,26 +185,80 @@ void Delay(void){
 }
 
 
+// Dependency: Requires PianoKeys_Init to be called first, assume at any time only one key is pressed
+// Inputs: None
+// Outputs: None
+// Description: Rising/Falling edge interrupt on PD6-PD0. Whenever any 
+// button is pressed, or released the interrupt will trigger.
+void GPIOPortD_Handler(void){  
+	uint8_t i = 0;
+  // simple debouncing code: generate 20ms to 30ms delay
+	for (uint32_t time=0;time<72724;time++) {}
+  if(get_current_mode()==PIANO){
+		if(GPIO_PORTD_RIS_R&0x01){
+			Sound_Start(tonetab[0+(octave*7)]/NUM_SAMPLES);
+			for(i=0;i<10;i++){
+					Delay();
+			}
+			Sound_stop();
+			GPIO_PORTD_ICR_R = 0x01;
+		}
+		if(GPIO_PORTD_RIS_R&0x02){
+			Sound_Start(tonetab[1+(octave*7)]/NUM_SAMPLES);
+			for(i=0;i<10;i++){
+					Delay();
+			}
+			Sound_stop();
+			GPIO_PORTD_ICR_R = 0x02;
+		}
+		if(GPIO_PORTD_RIS_R&0x04){
+			Sound_Start(tonetab[2+(octave*7)]/NUM_SAMPLES);
+			for(i=0;i<10;i++){
+					Delay();
+			}
+			Sound_stop();
+			GPIO_PORTD_ICR_R = 0x04;
+		}
+		if(GPIO_PORTD_RIS_R&0x08){
+			Sound_Start(tonetab[3+(octave*7)]/NUM_SAMPLES);
+			for(i=0;i<10;i++){
+					Delay();
+			}
+			Sound_stop();
+			GPIO_PORTD_ICR_R = 0x08;
+		}
+	}else{
+			GPIO_PORTD_ICR_R = 0x0F;
+	}
+}
+
+uint16_t counter = 0;
+
+uint8_t is_music_on(void){
+  return music_playing;
+}
+
 void play_a_song(){
-	curr_note=0, curr_song=0;
+	curr_note=0;
 	
 	while(playlist[curr_song][curr_note].delay){
-			if(is_music_on()){
-				if(playlist[curr_song][curr_note].tone_index == SILENCE){
+		if(get_current_mode()==AUTO_PLAY){
+					if(playlist[curr_song][curr_note].tone_index == SILENCE){
+						Sound_stop();
+					}
+					else{
+						Sound_Start(tonetab[playlist[curr_song][curr_note].tone_index]/NUM_SAMPLES);
+					}
+					
+					for(counter=0;counter<playlist[curr_song][curr_note].delay;counter++){
+						Delay();
+					}
+					
 					Sound_stop();
-				}
-				else{
-					Sound_Start(tonetab[playlist[curr_song][curr_note].tone_index]/NUM_SAMPLES);
-				}
-				for(counter=0;counter<playlist[curr_song][curr_note].delay;counter++){
-					Delay();
-				}
-				
-				Sound_stop();
-				curr_note++;
-			}else{
+					curr_note++;
+		}else{
 				break;
-			}
+		}
 	}
 }
 
