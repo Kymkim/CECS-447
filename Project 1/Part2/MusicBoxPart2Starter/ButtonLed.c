@@ -66,7 +66,7 @@ void PianoKeys_Init(void){ volatile unsigned long  delay;
   GPIO_PORTD_DEN_R |= 0x0F;          // 7) enable digital I/O on PD
 	
 	GPIO_PORTD_IS_R &= ~0x0F;     				//  PF4,PF0 is edge-sensitive
-  GPIO_PORTD_IBE_R &= ~0x0F;    				//  PF4,PF0 is not both edges
+  GPIO_PORTD_IBE_R |= 0x0F;    				//  PF4,PF0 is not both edges
   GPIO_PORTD_IEV_R &= ~0x0F;    				//  PF4,PF0 falling edge event
   GPIO_PORTD_ICR_R = 0x0F;      				//  Clear flags 4,0
   GPIO_PORTD_IM_R |= 0x0F;      				//  Arm interrupt on PF4,PF0

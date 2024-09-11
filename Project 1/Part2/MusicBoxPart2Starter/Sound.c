@@ -37,26 +37,37 @@ const uint32_t tonetab[] =
 
 // Constants
 // index definition for tones used in happy birthday.
-#define G4 4
-#define A4 5
-#define B4 6
-#define C5 0+7
-#define D5 1+7
-#define E5 2+7
-#define F5 3+7
-#define G5 4+7
-#define A5 5+7	
-#define B5 6+2*7
-#define C6 0+3*7
-#define D6 1+3*7
-#define E6 2+3*7
-#define F6 3+3*7
-#define G6 4+3*7
-#define A6 5+3*7
-#define B6 6+3*7	 
+#define C3 0
+#define D3 1
+#define E3 2
+#define F3 3
+#define G3 4
+#define A3 5
+#define B3 6
+#define C4 0+7
+#define D4 1+7
+#define E4 2+7
+#define F4 3+7
+#define G4 4+7
+#define A4 5+7
+#define B4 6+7
+#define C5 0+7*2
+#define D5 1+7*2
+#define E5 2+7*2
+#define F5 3+7*2
+#define G5 4+7*2
+#define A5 5+7*2
+#define B5 6+7*2
+#define C6 0+7*3
+#define D6 1+7*3
+#define E6 2+7*3
+#define F6 3+7*3
+#define G6 4+7*3
+#define A6 5+7*3
+#define B6 6+7*3
 
 #define MAX_NOTES 255 // maximum number of notes for a song to be played in the program
-#define NUM_SONGS 3   // number of songs in the play list.
+#define NUM_SONGS 4   // number of songs in the play list.
 #define SILENCE MAX_NOTES // use the last valid index to indicate a silence note. The song can only have up to 254 notes. 
 #define NUM_OCT  3   // number of octave defined in tontab[]
 #define NUM_NOTES_PER_OCT 7  // number of notes defined for each octave in tonetab
@@ -69,25 +80,37 @@ const uint32_t tonetab[] =
 // doe ray mi fa so la ti 
 // C   D   E  F  G  A  B
 NTyp playlist[][MAX_NOTES] = 
-{{//so   so   la   so   doe' ti
-   G5,2,G5,2,A5,4,G5,4,C6,4,B5,4,
+{
+	
+	// Mary Had A Little Lamb
+{E3, 4, D3, 4, C3, 4, D3, 4, E3, 4, E3, 4, E3, 8, 
+ D3, 4, D3, 4, D3, 8, E3, 4, G3, 4, G3, 8,
+ E3, 4, D3, 4, C3, 4, D3, 4, E3, 4, E3, 4, E3, 8, 
+ D3, 4, D3, 4, E3, 4, D3, 4, C3, 8, 0, 0 },
+
+	
+ // Twinkle Twinkle Little Stars
+{C3,4,C3,4,G3,4,G3,4,A3,4,A3,4,G3,8,F3,4,F3,4,E3,4,E3,4,D3,4,D3,4,C3,8, 
+ G3,4,G3,4,F3,4,F3,4,E3,4,E3,4,D3,8,G3,4,G3,4,F3,4,F3,4,E3,4,E3,4,D3,8, 
+ C3,4,C3,4,G3,4,G3,4,A3,4,A3,4,G3,8,F3,4,F3,4,E3,4,E3,4,D3,4,D3,4,C3,8,0,0},
+	
+
+ {
+	//so   so   la   so   doe' ti
+   G3,2,G3,2,A3,4,G3,4,C4,4,B3,4,
 // pause so   so   la   so   ray' doe'
-   SILENCE,4,  G5,2,G5,2,A5,4,G5,4,D6,4,C6,4,
+   SILENCE,4,  G3,2,G3,2,A3,4,G3,4,D4,4,C4,4,
 // pause so   so   so'  mi'  doe' ti   la
-   SILENCE,4,  G5,2,G5,2,G6,4,E6,4,C6,4,B5,4,A5,8, 
+   SILENCE,4,  G3,2,G3,2,G4,4,E4,4,C4,4,B3,4,A3,8, 
 // pause fa'  fa'   mi'  doe' ray' doe' stop
-	 SILENCE,4,  F6,2,F6,2, E6,4,C6,4,D6,4,C6,8,0,0},
-
-// Mary Had A Little Lamb
-{E5, 4, D5, 4, C5, 4, D5, 4, E5, 4, E5, 4, E5, 8, 
- D5, 4, D5, 4, D5, 8, E5, 4, G5, 4, G5, 8,
- E5, 4, D5, 4, C5, 4, D5, 4, E5, 4, E5, 4, E5, 8, 
- D5, 4, D5, 4, E5, 4, D5, 4, C5, 8, 0, 0 },
-
-// Twinkle Twinkle Little Stars
-{C5,4,C5,4,G5,4,G5,4,A5,4,A5,4,G5,8,F5,4,F5,4,E5,4,E5,4,D5,4,D5,4,C5,8, 
- G5,4,G5,4,F5,4,F5,4,E5,4,E5,4,D5,8,G5,4,G5,4,F5,4,F5,4,E5,4,E5,4,D5,8, 
- C5,4,C5,4,G5,4,G5,4,A5,4,A5,4,G5,8,F5,4,F5,4,E5,4,E5,4,D5,4,D5,4,C5,8,0,0}
+	 SILENCE,4,  F4,2,F4,2, E4,4,C4,4,D4,4,C4,8,0,0},
+	
+{	
+	E4,4,F4,4,G4,4,G4,4,G4,4,G4,4,G4,4,F4,4,E4,4,D4,4,D4,4,E4,4,C4,12,
+	E4,4,F4,4,G4,4,G4,4,G4,4,G4,4,G4,4,F4,4,E4,4,D4,4,D4,4,E4,8,      A4,8,
+	C4,4,D4,4,E4,12         ,A3,16              ,D3,16
+}
+	
 };
 
 
@@ -190,41 +213,55 @@ void Delay(void){
 // Outputs: None
 // Description: Rising/Falling edge interrupt on PD6-PD0. Whenever any 
 // button is pressed, or released the interrupt will trigger.
+
+uint8_t KEY0, KEY1, KEY2, KEY3 = 0;
+
 void GPIOPortD_Handler(void){  
 	uint8_t i = 0;
   // simple debouncing code: generate 20ms to 30ms delay
 	for (uint32_t time=0;time<72724;time++) {}
   if(get_current_mode()==PIANO){
 		if(GPIO_PORTD_RIS_R&0x01){
-			Sound_Start(tonetab[0+(octave*7)]/NUM_SAMPLES);
-			for(i=0;i<10;i++){
-					Delay();
+			if(KEY0){
+				Sound_stop();
+				KEY0=0;
+			}else{
+				Sound_Start(tonetab[0+(octave*7)]/NUM_SAMPLES);
+				KEY0=1;
 			}
-			Sound_stop();
+			//for(i=0;i<10;i++){
+			//		Delay();
+			//}
 			GPIO_PORTD_ICR_R = 0x01;
 		}
 		if(GPIO_PORTD_RIS_R&0x02){
-			Sound_Start(tonetab[1+(octave*7)]/NUM_SAMPLES);
-			for(i=0;i<10;i++){
-					Delay();
+			if(KEY1){
+				Sound_stop();
+				KEY1=0;
+			}else{
+				Sound_Start(tonetab[1+(octave*7)]/NUM_SAMPLES);
+				KEY1=1;
 			}
-			Sound_stop();
 			GPIO_PORTD_ICR_R = 0x02;
 		}
 		if(GPIO_PORTD_RIS_R&0x04){
-			Sound_Start(tonetab[2+(octave*7)]/NUM_SAMPLES);
-			for(i=0;i<10;i++){
-					Delay();
+			if(KEY2){
+				Sound_stop();
+				KEY2=0;
+			}else{
+				Sound_Start(tonetab[2+(octave*7)]/NUM_SAMPLES);
+				KEY2=1;
 			}
-			Sound_stop();
 			GPIO_PORTD_ICR_R = 0x04;
 		}
 		if(GPIO_PORTD_RIS_R&0x08){
-			Sound_Start(tonetab[3+(octave*7)]/NUM_SAMPLES);
-			for(i=0;i<10;i++){
-					Delay();
+			if(KEY3){
+				Sound_stop();
+				KEY3=0;
+			}else{
+				Sound_Start(tonetab[3+(octave*7)]/NUM_SAMPLES);
+				KEY3=1;
 			}
-			Sound_stop();
 			GPIO_PORTD_ICR_R = 0x08;
 		}
 	}else{
@@ -247,7 +284,7 @@ void play_a_song(){
 						Sound_stop();
 					}
 					else{
-						Sound_Start(tonetab[playlist[curr_song][curr_note].tone_index]/NUM_SAMPLES);
+						Sound_Start(tonetab[playlist[curr_song][curr_note].tone_index + (octave*7)]/NUM_SAMPLES);
 					}
 					
 					for(counter=0;counter<playlist[curr_song][curr_note].delay;counter++){
@@ -255,6 +292,7 @@ void play_a_song(){
 					}
 					
 					Sound_stop();
+					Delay();
 					curr_note++;
 		}else{
 				break;
