@@ -20,25 +20,27 @@ Section Cross References
     cecs447project2mcu1-1.o(.text.main) refers to uart0.o(.text.UART0_Init) for UART0_Init
     cecs447project2mcu1-1.o(.text.main) refers to ledsw.o(.text.LEDSW_Init) for LEDSW_Init
     cecs447project2mcu1-1.o(.text.main) refers to cecs447project2mcu1-1.o(.text.Display_Menu) for Display_Menu
-    cecs447project2mcu1-1.o(.text.main) refers to uart0.o(.text.UART0_InChar) for UART0_InChar
+    cecs447project2mcu1-1.o(.text.main) refers to cecs447project2mcu1-1.o(.bss.end_of_str) for end_of_str
+    cecs447project2mcu1-1.o(.text.main) refers to cecs447project2mcu1-1.o(.bss.str_idx) for str_idx
+    cecs447project2mcu1-1.o(.text.main) refers to uart0.o(.text.UART0_OutCRLF) for UART0_OutCRLF
+    cecs447project2mcu1-1.o(.text.main) refers to cecs447project2mcu1-1.o(.bss.string) for string
     cecs447project2mcu1-1.o(.text.main) refers to cecs447project2mcu1-1.o(.text.Mode1) for Mode1
     cecs447project2mcu1-1.o(.text.main) refers to cecs447project2mcu1-1.o(.text.Mode2) for Mode2
     cecs447project2mcu1-1.o(.text.main) refers to cecs447project2mcu1-1.o(.text.Mode3) for Mode3
-    cecs447project2mcu1-1.o(.text.main) refers to uart0.o(.text.UART0_OutCRLF) for UART0_OutCRLF
     cecs447project2mcu1-1.o(.ARM.exidx.text.main) refers to cecs447project2mcu1-1.o(.text.main) for [Anonymous Symbol]
     cecs447project2mcu1-1.o(.text.Display_Menu) refers to cecs447project2mcu1-1.o(.rodata.str1.1) for .L.str
     cecs447project2mcu1-1.o(.text.Display_Menu) refers to uart0.o(.text.UART0_OutString) for UART0_OutString
     cecs447project2mcu1-1.o(.text.Display_Menu) refers to uart0.o(.text.UART0_OutCRLF) for UART0_OutCRLF
     cecs447project2mcu1-1.o(.ARM.exidx.text.Display_Menu) refers to cecs447project2mcu1-1.o(.text.Display_Menu) for [Anonymous Symbol]
+    cecs447project2mcu1-1.o(.text.Mode1) refers to uart0.o(.text.UART0_OutCRLF) for UART0_OutCRLF
     cecs447project2mcu1-1.o(.text.Mode1) refers to cecs447project2mcu1-1.o(.text.Mode1_Menu) for Mode1_Menu
     cecs447project2mcu1-1.o(.text.Mode1) refers to cecs447project2mcu1-1.o(.bss.end_of_str) for end_of_str
     cecs447project2mcu1-1.o(.text.Mode1) refers to startup.o(.text) for WaitForInterrupt
     cecs447project2mcu1-1.o(.text.Mode1) refers to cecs447project2mcu1-1.o(.bss.str_idx) for str_idx
-    cecs447project2mcu1-1.o(.text.Mode1) refers to uart0.o(.text.UART0_OutCRLF) for UART0_OutCRLF
     cecs447project2mcu1-1.o(.text.Mode1) refers to cecs447project2mcu1-1.o(.bss.string) for string
     cecs447project2mcu1-1.o(.text.Mode1) refers to cecs447project2mcu1-1.o(.text.ChangeLEDColor) for ChangeLEDColor
     cecs447project2mcu1-1.o(.text.Mode1) refers to cecs447project2mcu1-1.o(.text.ChangeBrightness) for ChangeBrightness
-    cecs447project2mcu1-1.o(.text.Mode1) refers to cecs447project2mcu1-1.o(.rodata.str1.1) for .L.str.11
+    cecs447project2mcu1-1.o(.text.Mode1) refers to cecs447project2mcu1-1.o(.rodata.str1.1) for .L.str.13
     cecs447project2mcu1-1.o(.text.Mode1) refers to uart0.o(.text.UART0_OutString) for UART0_OutString
     cecs447project2mcu1-1.o(.ARM.exidx.text.Mode1) refers to cecs447project2mcu1-1.o(.text.Mode1) for [Anonymous Symbol]
     cecs447project2mcu1-1.o(.ARM.exidx.text.Mode2) refers to cecs447project2mcu1-1.o(.text.Mode2) for [Anonymous Symbol]
@@ -48,21 +50,21 @@ Section Cross References
     cecs447project2mcu1-1.o(.text.UART0_Handler) refers to cecs447project2mcu1-1.o(.bss.string) for string
     cecs447project2mcu1-1.o(.text.UART0_Handler) refers to uart0.o(.text.UART0_OutChar) for UART0_OutChar
     cecs447project2mcu1-1.o(.ARM.exidx.text.UART0_Handler) refers to cecs447project2mcu1-1.o(.text.UART0_Handler) for [Anonymous Symbol]
-    cecs447project2mcu1-1.o(.text.Mode1_Menu) refers to cecs447project2mcu1-1.o(.rodata.str1.1) for .L.str.6
+    cecs447project2mcu1-1.o(.text.Mode1_Menu) refers to cecs447project2mcu1-1.o(.rodata.str1.1) for .L.str.8
     cecs447project2mcu1-1.o(.text.Mode1_Menu) refers to uart0.o(.text.UART0_OutString) for UART0_OutString
     cecs447project2mcu1-1.o(.text.Mode1_Menu) refers to uart0.o(.text.UART0_OutCRLF) for UART0_OutCRLF
     cecs447project2mcu1-1.o(.ARM.exidx.text.Mode1_Menu) refers to cecs447project2mcu1-1.o(.text.Mode1_Menu) for [Anonymous Symbol]
     cecs447project2mcu1-1.o(.text.ChangeLEDColor) refers to uart0.o(.text.UART0_OutCRLF) for UART0_OutCRLF
     cecs447project2mcu1-1.o(.text.ChangeLEDColor) refers to cecs447project2mcu1-1.o(.bss.end_of_str) for end_of_str
     cecs447project2mcu1-1.o(.text.ChangeLEDColor) refers to cecs447project2mcu1-1.o(.bss.str_idx) for str_idx
-    cecs447project2mcu1-1.o(.text.ChangeLEDColor) refers to cecs447project2mcu1-1.o(.rodata.str1.1) for .L.str.12
+    cecs447project2mcu1-1.o(.text.ChangeLEDColor) refers to cecs447project2mcu1-1.o(.rodata.str1.1) for .L.str.14
     cecs447project2mcu1-1.o(.text.ChangeLEDColor) refers to uart0.o(.text.UART0_OutString) for UART0_OutString
     cecs447project2mcu1-1.o(.text.ChangeLEDColor) refers to startup.o(.text) for WaitForInterrupt
     cecs447project2mcu1-1.o(.text.ChangeLEDColor) refers to cecs447project2mcu1-1.o(.bss.string) for string
     cecs447project2mcu1-1.o(.text.ChangeLEDColor) refers to cecs447project2mcu1-1.o(.bss.curr_col_index) for curr_col_index
     cecs447project2mcu1-1.o(.ARM.exidx.text.ChangeLEDColor) refers to cecs447project2mcu1-1.o(.text.ChangeLEDColor) for [Anonymous Symbol]
     cecs447project2mcu1-1.o(.text.ChangeBrightness) refers to uart0.o(.text.UART0_OutCRLF) for UART0_OutCRLF
-    cecs447project2mcu1-1.o(.text.ChangeBrightness) refers to cecs447project2mcu1-1.o(.rodata.str1.1) for .L.str.15
+    cecs447project2mcu1-1.o(.text.ChangeBrightness) refers to cecs447project2mcu1-1.o(.rodata.str1.1) for .L.str.17
     cecs447project2mcu1-1.o(.text.ChangeBrightness) refers to uart0.o(.text.UART0_OutString) for UART0_OutString
     cecs447project2mcu1-1.o(.text.ChangeBrightness) refers to cecs447project2mcu1-1.o(.bss.end_of_str) for end_of_str
     cecs447project2mcu1-1.o(.text.ChangeBrightness) refers to startup.o(.text) for WaitForInterrupt
@@ -70,9 +72,10 @@ Section Cross References
     cecs447project2mcu1-1.o(.text.ChangeBrightness) refers to cecs447project2mcu1-1.o(.bss.string) for string
     cecs447project2mcu1-1.o(.text.ChangeBrightness) refers to cecs447project2mcu1-1.o(.text.Str_to_UDec) for Str_to_UDec
     cecs447project2mcu1-1.o(.text.ChangeBrightness) refers to cecs447project2mcu1-1.o(.bss.brightness) for brightness
+    cecs447project2mcu1-1.o(.text.ChangeBrightness) refers to cecs447project2mcu1-1.o(.bss.curr_col_index) for curr_col_index
+    cecs447project2mcu1-1.o(.text.ChangeBrightness) refers to cecs447project2mcu1-1.o(.rodata.color_wheel) for color_wheel
     cecs447project2mcu1-1.o(.text.ChangeBrightness) refers to ledsw.o(.bss.LOW) for LOW
     cecs447project2mcu1-1.o(.text.ChangeBrightness) refers to ledsw.o(.bss.HIGH) for HIGH
-    cecs447project2mcu1-1.o(.text.ChangeBrightness) refers to cecs447project2mcu1-1.o(.text.Mode1) for Mode1
     cecs447project2mcu1-1.o(.ARM.exidx.text.ChangeBrightness) refers to cecs447project2mcu1-1.o(.text.ChangeBrightness) for [Anonymous Symbol]
     cecs447project2mcu1-1.o(.ARM.exidx.text.Str_to_UDec) refers to cecs447project2mcu1-1.o(.text.Str_to_UDec) for [Anonymous Symbol]
     cecs447project2mcu1-1.o(.text.SysTick_Handler) refers to cecs447project2mcu1-1.o(.bss.curr_col_index) for curr_col_index
@@ -233,6 +236,7 @@ Removing Unused input sections from the image.
     Removing uart0.o(.ARM.exidx.text.UART0_Init), (8 bytes).
     Removing uart0.o(.ARM.exidx.text.UART0_OutCRLF), (8 bytes).
     Removing uart0.o(.ARM.exidx.text.UART0_OutChar), (8 bytes).
+    Removing uart0.o(.text.UART0_InChar), (36 bytes).
     Removing uart0.o(.ARM.exidx.text.UART0_InChar), (8 bytes).
     Removing uart0.o(.ARM.exidx.text.UART0_OutString), (8 bytes).
     Removing uart0.o(.text.UART0_InUDec), (152 bytes).
@@ -249,7 +253,7 @@ Removing Unused input sections from the image.
     Removing ledsw.o(.text), (0 bytes).
     Removing ledsw.o(.ARM.exidx.text.LEDSW_Init), (8 bytes).
 
-34 unused section(s) (total 838 bytes) removed from the image.
+35 unused section(s) (total 874 bytes) removed from the image.
 
 ==============================================================================
 
@@ -373,40 +377,41 @@ Image Symbol Table
     .text                                    0x000003d8   Section        2  use_no_semi.o(.text)
     .text                                    0x000003da   Section        0  indicate_semi.o(.text)
     [Anonymous Symbol]                       0x000003dc   Section        0  cecs447project2mcu1-1.o(.text.ChangeBrightness)
-    [Anonymous Symbol]                       0x000004c4   Section        0  cecs447project2mcu1-1.o(.text.ChangeLEDColor)
-    [Anonymous Symbol]                       0x0000064c   Section        0  cecs447project2mcu1-1.o(.text.Display_Menu)
-    [Anonymous Symbol]                       0x000006ac   Section        0  ledsw.o(.text.LEDSW_Init)
-    [Anonymous Symbol]                       0x0000082c   Section        0  cecs447project2mcu1-1.o(.text.Mode1)
-    [Anonymous Symbol]                       0x000008c0   Section        0  cecs447project2mcu1-1.o(.text.Mode1_Menu)
-    [Anonymous Symbol]                       0x00000914   Section        0  cecs447project2mcu1-1.o(.text.Mode2)
-    [Anonymous Symbol]                       0x00000918   Section        0  cecs447project2mcu1-1.o(.text.Mode3)
-    [Anonymous Symbol]                       0x0000091c   Section        0  pll.o(.text.PLL_Init)
-    [Anonymous Symbol]                       0x000009a0   Section        0  cecs447project2mcu1-1.o(.text.Str_to_UDec)
-    [Anonymous Symbol]                       0x00000a14   Section        0  cecs447project2mcu1-1.o(.text.SysTick_Handler)
-    [Anonymous Symbol]                       0x00000adc   Section        0  cecs447project2mcu1-1.o(.text.UART0_Handler)
-    [Anonymous Symbol]                       0x00000bb0   Section        0  uart0.o(.text.UART0_InChar)
-    [Anonymous Symbol]                       0x00000bd4   Section        0  uart0.o(.text.UART0_Init)
-    [Anonymous Symbol]                       0x00000cf0   Section        0  uart0.o(.text.UART0_OutCRLF)
-    [Anonymous Symbol]                       0x00000d00   Section        0  uart0.o(.text.UART0_OutChar)
-    [Anonymous Symbol]                       0x00000d30   Section        0  uart0.o(.text.UART0_OutString)
-    [Anonymous Symbol]                       0x00000d54   Section        0  cecs447project2mcu1-1.o(.text.main)
-    .L.str.13                                0x00000dbc   Data          71  cecs447project2mcu1-1.o(.rodata.str1.1)
-    [Anonymous Symbol]                       0x00000dbc   Section        0  cecs447project2mcu1-1.o(.rodata.str1.1)
-    .L.str.15                                0x00000e03   Data          67  cecs447project2mcu1-1.o(.rodata.str1.1)
-    .L.str.12                                0x00000e46   Data          48  cecs447project2mcu1-1.o(.rodata.str1.1)
-    .L.str.14                                0x00000e76   Data          33  cecs447project2mcu1-1.o(.rodata.str1.1)
-    .L.str.11                                0x00000e97   Data          33  cecs447project2mcu1-1.o(.rodata.str1.1)
-    .L.str.5                                 0x00000eb8   Data          25  cecs447project2mcu1-1.o(.rodata.str1.1)
-    .L.str.7                                 0x00000ed1   Data          68  cecs447project2mcu1-1.o(.rodata.str1.1)
-    .L.str.9                                 0x00000f15   Data          43  cecs447project2mcu1-1.o(.rodata.str1.1)
-    .L.str.1                                 0x00000f40   Data           5  cecs447project2mcu1-1.o(.rodata.str1.1)
-    .L.str                                   0x00000f45   Data          37  cecs447project2mcu1-1.o(.rodata.str1.1)
-    .L.str.4                                 0x00000f6a   Data          35  cecs447project2mcu1-1.o(.rodata.str1.1)
-    .L.str.3                                 0x00000f8d   Data          25  cecs447project2mcu1-1.o(.rodata.str1.1)
-    .L.str.8                                 0x00000fa6   Data          23  cecs447project2mcu1-1.o(.rodata.str1.1)
-    .L.str.10                                0x00000fbd   Data           8  cecs447project2mcu1-1.o(.rodata.str1.1)
-    .L.str.6                                 0x00000fc5   Data          12  cecs447project2mcu1-1.o(.rodata.str1.1)
-    .L.str.2                                 0x00000fd1   Data          10  cecs447project2mcu1-1.o(.rodata.str1.1)
+    [Anonymous Symbol]                       0x000004f0   Section        0  cecs447project2mcu1-1.o(.text.ChangeLEDColor)
+    [Anonymous Symbol]                       0x00000678   Section        0  cecs447project2mcu1-1.o(.text.Display_Menu)
+    [Anonymous Symbol]                       0x000006f8   Section        0  ledsw.o(.text.LEDSW_Init)
+    [Anonymous Symbol]                       0x00000878   Section        0  cecs447project2mcu1-1.o(.text.Mode1)
+    [Anonymous Symbol]                       0x00000914   Section        0  cecs447project2mcu1-1.o(.text.Mode1_Menu)
+    [Anonymous Symbol]                       0x00000968   Section        0  cecs447project2mcu1-1.o(.text.Mode2)
+    [Anonymous Symbol]                       0x0000096c   Section        0  cecs447project2mcu1-1.o(.text.Mode3)
+    [Anonymous Symbol]                       0x00000970   Section        0  pll.o(.text.PLL_Init)
+    [Anonymous Symbol]                       0x000009f4   Section        0  cecs447project2mcu1-1.o(.text.Str_to_UDec)
+    [Anonymous Symbol]                       0x00000a68   Section        0  cecs447project2mcu1-1.o(.text.SysTick_Handler)
+    [Anonymous Symbol]                       0x00000b30   Section        0  cecs447project2mcu1-1.o(.text.UART0_Handler)
+    [Anonymous Symbol]                       0x00000c04   Section        0  uart0.o(.text.UART0_Init)
+    [Anonymous Symbol]                       0x00000d20   Section        0  uart0.o(.text.UART0_OutCRLF)
+    [Anonymous Symbol]                       0x00000d30   Section        0  uart0.o(.text.UART0_OutChar)
+    [Anonymous Symbol]                       0x00000d60   Section        0  uart0.o(.text.UART0_OutString)
+    [Anonymous Symbol]                       0x00000d84   Section        0  cecs447project2mcu1-1.o(.text.main)
+    .L.str.4                                 0x00000e24   Data          29  cecs447project2mcu1-1.o(.rodata.str1.1)
+    [Anonymous Symbol]                       0x00000e24   Section        0  cecs447project2mcu1-1.o(.rodata.str1.1)
+    .L.str.15                                0x00000e41   Data          71  cecs447project2mcu1-1.o(.rodata.str1.1)
+    .L.str.17                                0x00000e88   Data          67  cecs447project2mcu1-1.o(.rodata.str1.1)
+    .L.str.14                                0x00000ecb   Data          48  cecs447project2mcu1-1.o(.rodata.str1.1)
+    .L.str.6                                 0x00000efb   Data          36  cecs447project2mcu1-1.o(.rodata.str1.1)
+    .L.str.3                                 0x00000f1f   Data          26  cecs447project2mcu1-1.o(.rodata.str1.1)
+    .L.str.5                                 0x00000f39   Data          36  cecs447project2mcu1-1.o(.rodata.str1.1)
+    .L.str.16                                0x00000f5d   Data          33  cecs447project2mcu1-1.o(.rodata.str1.1)
+    .L.str.13                                0x00000f7e   Data          33  cecs447project2mcu1-1.o(.rodata.str1.1)
+    .L.str.9                                 0x00000f9f   Data          68  cecs447project2mcu1-1.o(.rodata.str1.1)
+    .L.str.7                                 0x00000fe3   Data          29  cecs447project2mcu1-1.o(.rodata.str1.1)
+    .L.str.11                                0x00001000   Data          43  cecs447project2mcu1-1.o(.rodata.str1.1)
+    .L.str.1                                 0x0000102b   Data           5  cecs447project2mcu1-1.o(.rodata.str1.1)
+    .L.str                                   0x00001030   Data          37  cecs447project2mcu1-1.o(.rodata.str1.1)
+    .L.str.10                                0x00001055   Data          23  cecs447project2mcu1-1.o(.rodata.str1.1)
+    .L.str.12                                0x0000106c   Data           8  cecs447project2mcu1-1.o(.rodata.str1.1)
+    .L.str.8                                 0x00001074   Data          12  cecs447project2mcu1-1.o(.rodata.str1.1)
+    .L.str.2                                 0x00001080   Data          10  cecs447project2mcu1-1.o(.rodata.str1.1)
     .bss                                     0x20000000   Section       96  libspace.o(.bss)
     HeapMem                                  0x20000080   Data           0  startup.o(HEAP)
     StackMem                                 0x20000080   Data           0  startup.o(STACK)
@@ -638,27 +643,26 @@ Image Symbol Table
     __I$use$semihosting                      0x000003d9   Thumb Code     0  use_no_semi.o(.text)
     __use_no_semihosting_swi                 0x000003d9   Thumb Code     2  use_no_semi.o(.text)
     __semihosting_library_function           0x000003db   Thumb Code     0  indicate_semi.o(.text)
-    ChangeBrightness                         0x000003dd   Thumb Code   232  cecs447project2mcu1-1.o(.text.ChangeBrightness)
-    ChangeLEDColor                           0x000004c5   Thumb Code   390  cecs447project2mcu1-1.o(.text.ChangeLEDColor)
-    Display_Menu                             0x0000064d   Thumb Code    96  cecs447project2mcu1-1.o(.text.Display_Menu)
-    LEDSW_Init                               0x000006ad   Thumb Code   384  ledsw.o(.text.LEDSW_Init)
-    Mode1                                    0x0000082d   Thumb Code   146  cecs447project2mcu1-1.o(.text.Mode1)
-    Mode1_Menu                               0x000008c1   Thumb Code    84  cecs447project2mcu1-1.o(.text.Mode1_Menu)
-    Mode2                                    0x00000915   Thumb Code     2  cecs447project2mcu1-1.o(.text.Mode2)
-    Mode3                                    0x00000919   Thumb Code     2  cecs447project2mcu1-1.o(.text.Mode3)
-    PLL_Init                                 0x0000091d   Thumb Code   132  pll.o(.text.PLL_Init)
-    Str_to_UDec                              0x000009a1   Thumb Code   114  cecs447project2mcu1-1.o(.text.Str_to_UDec)
-    SysTick_Handler                          0x00000a15   Thumb Code   198  cecs447project2mcu1-1.o(.text.SysTick_Handler)
-    UART0_Handler                            0x00000add   Thumb Code   210  cecs447project2mcu1-1.o(.text.UART0_Handler)
-    UART0_InChar                             0x00000bb1   Thumb Code    36  uart0.o(.text.UART0_InChar)
-    UART0_Init                               0x00000bd5   Thumb Code   282  uart0.o(.text.UART0_Init)
-    UART0_OutCRLF                            0x00000cf1   Thumb Code    16  uart0.o(.text.UART0_OutCRLF)
-    UART0_OutChar                            0x00000d01   Thumb Code    46  uart0.o(.text.UART0_OutChar)
-    UART0_OutString                          0x00000d31   Thumb Code    36  uart0.o(.text.UART0_OutString)
-    main                                     0x00000d55   Thumb Code    96  cecs447project2mcu1-1.o(.text.main)
-    color_wheel                              0x00000db4   Data           8  cecs447project2mcu1-1.o(.rodata.color_wheel)
-    Region$$Table$$Base                      0x00000fdc   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x00000fec   Number         0  anon$$obj.o(Region$$Table)
+    ChangeBrightness                         0x000003dd   Thumb Code   274  cecs447project2mcu1-1.o(.text.ChangeBrightness)
+    ChangeLEDColor                           0x000004f1   Thumb Code   390  cecs447project2mcu1-1.o(.text.ChangeLEDColor)
+    Display_Menu                             0x00000679   Thumb Code   128  cecs447project2mcu1-1.o(.text.Display_Menu)
+    LEDSW_Init                               0x000006f9   Thumb Code   384  ledsw.o(.text.LEDSW_Init)
+    Mode1                                    0x00000879   Thumb Code   154  cecs447project2mcu1-1.o(.text.Mode1)
+    Mode1_Menu                               0x00000915   Thumb Code    84  cecs447project2mcu1-1.o(.text.Mode1_Menu)
+    Mode2                                    0x00000969   Thumb Code     2  cecs447project2mcu1-1.o(.text.Mode2)
+    Mode3                                    0x0000096d   Thumb Code     2  cecs447project2mcu1-1.o(.text.Mode3)
+    PLL_Init                                 0x00000971   Thumb Code   132  pll.o(.text.PLL_Init)
+    Str_to_UDec                              0x000009f5   Thumb Code   114  cecs447project2mcu1-1.o(.text.Str_to_UDec)
+    SysTick_Handler                          0x00000a69   Thumb Code   198  cecs447project2mcu1-1.o(.text.SysTick_Handler)
+    UART0_Handler                            0x00000b31   Thumb Code   210  cecs447project2mcu1-1.o(.text.UART0_Handler)
+    UART0_Init                               0x00000c05   Thumb Code   282  uart0.o(.text.UART0_Init)
+    UART0_OutCRLF                            0x00000d21   Thumb Code    16  uart0.o(.text.UART0_OutCRLF)
+    UART0_OutChar                            0x00000d31   Thumb Code    46  uart0.o(.text.UART0_OutChar)
+    UART0_OutString                          0x00000d61   Thumb Code    36  uart0.o(.text.UART0_OutString)
+    main                                     0x00000d85   Thumb Code   152  cecs447project2mcu1-1.o(.text.main)
+    color_wheel                              0x00000e1c   Data           8  cecs447project2mcu1-1.o(.rodata.color_wheel)
+    Region$$Table$$Base                      0x0000108c   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x0000109c   Number         0  anon$$obj.o(Region$$Table)
     __libspace_start                         0x20000000   Data          96  libspace.o(.bss)
     HIGH                                     0x20000060   Data           4  ledsw.o(.bss.HIGH)
     __temporary_stack_top$libspace           0x20000060   Data           0  libspace.o(.bss)
@@ -677,9 +681,9 @@ Memory Map of the image
 
   Image Entry point : 0x0000026d
 
-  Load Region LR_1 (Base: 0x00000000, Size: 0x00000fec, Max: 0xffffffff, ABSOLUTE)
+  Load Region LR_1 (Base: 0x00000000, Size: 0x0000109c, Max: 0xffffffff, ABSOLUTE)
 
-    Execution Region ER_RO (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x00000fec, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_RO (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x0000109c, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -742,45 +746,45 @@ Memory Map of the image
     0x000003d8   0x000003d8   0x00000002   Code   RO          205    .text               c_w.l(use_no_semi.o)
     0x000003da   0x000003da   0x00000000   Code   RO          207    .text               c_w.l(indicate_semi.o)
     0x000003da   0x000003da   0x00000002   PAD
-    0x000003dc   0x000003dc   0x000000e8   Code   RO           37    .text.ChangeBrightness  cecs447project2mcu1-1.o
-    0x000004c4   0x000004c4   0x00000186   Code   RO           35    .text.ChangeLEDColor  cecs447project2mcu1-1.o
-    0x0000064a   0x0000064a   0x00000002   PAD
-    0x0000064c   0x0000064c   0x00000060   Code   RO           23    .text.Display_Menu  cecs447project2mcu1-1.o
-    0x000006ac   0x000006ac   0x00000180   Code   RO           86    .text.LEDSW_Init    ledsw.o
-    0x0000082c   0x0000082c   0x00000092   Code   RO           25    .text.Mode1         cecs447project2mcu1-1.o
-    0x000008be   0x000008be   0x00000002   PAD
-    0x000008c0   0x000008c0   0x00000054   Code   RO           33    .text.Mode1_Menu    cecs447project2mcu1-1.o
-    0x00000914   0x00000914   0x00000002   Code   RO           27    .text.Mode2         cecs447project2mcu1-1.o
-    0x00000916   0x00000916   0x00000002   PAD
-    0x00000918   0x00000918   0x00000002   Code   RO           29    .text.Mode3         cecs447project2mcu1-1.o
-    0x0000091a   0x0000091a   0x00000002   PAD
-    0x0000091c   0x0000091c   0x00000084   Code   RO           13    .text.PLL_Init      pll.o
-    0x000009a0   0x000009a0   0x00000072   Code   RO           39    .text.Str_to_UDec   cecs447project2mcu1-1.o
-    0x00000a12   0x00000a12   0x00000002   PAD
-    0x00000a14   0x00000a14   0x000000c6   Code   RO           41    .text.SysTick_Handler  cecs447project2mcu1-1.o
-    0x00000ada   0x00000ada   0x00000002   PAD
-    0x00000adc   0x00000adc   0x000000d2   Code   RO           31    .text.UART0_Handler  cecs447project2mcu1-1.o
-    0x00000bae   0x00000bae   0x00000002   PAD
-    0x00000bb0   0x00000bb0   0x00000024   Code   RO           64    .text.UART0_InChar  uart0.o
-    0x00000bd4   0x00000bd4   0x0000011a   Code   RO           58    .text.UART0_Init    uart0.o
-    0x00000cee   0x00000cee   0x00000002   PAD
-    0x00000cf0   0x00000cf0   0x00000010   Code   RO           60    .text.UART0_OutCRLF  uart0.o
-    0x00000d00   0x00000d00   0x0000002e   Code   RO           62    .text.UART0_OutChar  uart0.o
-    0x00000d2e   0x00000d2e   0x00000002   PAD
-    0x00000d30   0x00000d30   0x00000024   Code   RO           66    .text.UART0_OutString  uart0.o
-    0x00000d54   0x00000d54   0x00000060   Code   RO           21    .text.main          cecs447project2mcu1-1.o
-    0x00000db4   0x00000db4   0x00000008   Data   RO           43    .rodata.color_wheel  cecs447project2mcu1-1.o
-    0x00000dbc   0x00000dbc   0x0000021f   Data   RO           49    .rodata.str1.1      cecs447project2mcu1-1.o
-    0x00000fdb   0x00000fdb   0x00000001   PAD
-    0x00000fdc   0x00000fdc   0x00000010   Data   RO          263    Region$$Table       anon$$obj.o
+    0x000003dc   0x000003dc   0x00000112   Code   RO           37    .text.ChangeBrightness  cecs447project2mcu1-1.o
+    0x000004ee   0x000004ee   0x00000002   PAD
+    0x000004f0   0x000004f0   0x00000186   Code   RO           35    .text.ChangeLEDColor  cecs447project2mcu1-1.o
+    0x00000676   0x00000676   0x00000002   PAD
+    0x00000678   0x00000678   0x00000080   Code   RO           23    .text.Display_Menu  cecs447project2mcu1-1.o
+    0x000006f8   0x000006f8   0x00000180   Code   RO           86    .text.LEDSW_Init    ledsw.o
+    0x00000878   0x00000878   0x0000009a   Code   RO           25    .text.Mode1         cecs447project2mcu1-1.o
+    0x00000912   0x00000912   0x00000002   PAD
+    0x00000914   0x00000914   0x00000054   Code   RO           33    .text.Mode1_Menu    cecs447project2mcu1-1.o
+    0x00000968   0x00000968   0x00000002   Code   RO           27    .text.Mode2         cecs447project2mcu1-1.o
+    0x0000096a   0x0000096a   0x00000002   PAD
+    0x0000096c   0x0000096c   0x00000002   Code   RO           29    .text.Mode3         cecs447project2mcu1-1.o
+    0x0000096e   0x0000096e   0x00000002   PAD
+    0x00000970   0x00000970   0x00000084   Code   RO           13    .text.PLL_Init      pll.o
+    0x000009f4   0x000009f4   0x00000072   Code   RO           39    .text.Str_to_UDec   cecs447project2mcu1-1.o
+    0x00000a66   0x00000a66   0x00000002   PAD
+    0x00000a68   0x00000a68   0x000000c6   Code   RO           41    .text.SysTick_Handler  cecs447project2mcu1-1.o
+    0x00000b2e   0x00000b2e   0x00000002   PAD
+    0x00000b30   0x00000b30   0x000000d2   Code   RO           31    .text.UART0_Handler  cecs447project2mcu1-1.o
+    0x00000c02   0x00000c02   0x00000002   PAD
+    0x00000c04   0x00000c04   0x0000011a   Code   RO           58    .text.UART0_Init    uart0.o
+    0x00000d1e   0x00000d1e   0x00000002   PAD
+    0x00000d20   0x00000d20   0x00000010   Code   RO           60    .text.UART0_OutCRLF  uart0.o
+    0x00000d30   0x00000d30   0x0000002e   Code   RO           62    .text.UART0_OutChar  uart0.o
+    0x00000d5e   0x00000d5e   0x00000002   PAD
+    0x00000d60   0x00000d60   0x00000024   Code   RO           66    .text.UART0_OutString  uart0.o
+    0x00000d84   0x00000d84   0x00000098   Code   RO           21    .text.main          cecs447project2mcu1-1.o
+    0x00000e1c   0x00000e1c   0x00000008   Data   RO           43    .rodata.color_wheel  cecs447project2mcu1-1.o
+    0x00000e24   0x00000e24   0x00000266   Data   RO           49    .rodata.str1.1      cecs447project2mcu1-1.o
+    0x0000108a   0x0000108a   0x00000002   PAD
+    0x0000108c   0x0000108c   0x00000010   Data   RO          263    Region$$Table       anon$$obj.o
 
 
-    Execution Region ER_RW (Exec base: 0x20000000, Load base: 0x00000fec, Size: 0x00000000, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_RW (Exec base: 0x20000000, Load base: 0x0000109c, Size: 0x00000000, Max: 0xffffffff, ABSOLUTE)
 
     **** No section assigned to this execution region ****
 
 
-    Execution Region ER_ZI (Exec base: 0x20000000, Load base: 0x00000fec, Size: 0x00000480, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_ZI (Exec base: 0x20000000, Load base: 0x0000109c, Size: 0x00000480, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -803,16 +807,16 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-      1570         24        551          0         24       3124   cecs447project2mcu1-1.o
+      1708         24        622          0         24       3217   cecs447project2mcu1-1.o
        384          0          0          0          8        568   ledsw.o
        132          0          0          0          0        449   pll.o
        692        632          0          0       1024        996   startup.o
-       416          0          0          0          0       2645   uart0.o
+       380          0          0          0          0       2645   uart0.o
 
     ----------------------------------------------------------------------
-      3212        656        568          0       1056       7782   Object Totals
+      3316        656        640          0       1056       7875   Object Totals
          0          0         16          0          0          0   (incl. Generated)
-        18          0          1          0          0          0   (incl. Padding)
+        20          0          2          0          0          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -858,15 +862,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-      3508        672        568          0       1152       8198   Grand Totals
-      3508        672        568          0       1152       8198   ELF Image Totals
-      3508        672        568          0          0          0   ROM Totals
+      3612        672        640          0       1152       8291   Grand Totals
+      3612        672        640          0       1152       8291   ELF Image Totals
+      3612        672        640          0          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                 4076 (   3.98kB)
+    Total RO  Size (Code + RO Data)                 4252 (   4.15kB)
     Total RW  Size (RW Data + ZI Data)              1152 (   1.12kB)
-    Total ROM Size (Code + RO Data + RW Data)       4076 (   3.98kB)
+    Total ROM Size (Code + RO Data + RW Data)       4252 (   4.15kB)
 
 ==============================================================================
 

@@ -59,7 +59,13 @@ int main(void){
   while(1){
 		// displays the main menu 
 		Display_Menu(); 
-		switch(UART0_InChar()){
+		while (!end_of_str) { // wait until the whole string is received.
+			WaitForInterrupt();
+		}
+		end_of_str = false;
+		str_idx = 0;
+		UART0_OutCRLF();
+		switch(string[0]){
 			case '1':
 				Mode1();
 				break;
@@ -110,12 +116,15 @@ void Display_Menu(void){
 	UART0_OutCRLF();
 	UART0_OutString((uint8_t *)"Main Menu");
 	UART0_OutCRLF();
-	UART0_OutString((uint8_t *)"1. PC<->MCU1 LED Control");
+	UART0_OutString((uint8_t *)"1. PC<->MCU1 LED Control ");
 	UART0_OutCRLF();
-	//Will add other modes later
-	UART0_OutString((uint8_t *)"Please choose a communication mode");
+	UART0_OutString((uint8_t *)"2. MCU1<->MCU2 Color Wheel. ");
 	UART0_OutCRLF();
-	UART0_OutString((uint8_t *)"(Only Mode 1 For now...)");
+	UART0_OutString((uint8_t *)"3. PC<->MCU1<->MCU2<->PC Chat Room ");
+	UART0_OutCRLF();
+	UART0_OutString((uint8_t *)"Please choose a communication mode ");
+	UART0_OutCRLF();
+	UART0_OutString((uint8_t *)"(Please choose from 1, 2 ,3)");
 }
 
 void Mode1_Menu(void){
@@ -133,6 +142,7 @@ void Mode1_Menu(void){
 
 
 void Mode1(void){
+	UART0_OutCRLF();
 	Mode1_Menu();
 	while (!end_of_str) { // wait until the whole string is received.
 			WaitForInterrupt();
@@ -152,7 +162,7 @@ void Mode1(void){
 			break;
 		case '3':
 			UART0_OutCRLF();
-			return;
+			break;
 		default:
 			UART0_OutCRLF();
 			UART0_OutString((uint8_t *)"Invalid Input. Please try again!");
@@ -236,20 +246,18 @@ void ChangeBrightness(){
   brightness = Str_to_UDec(string);
 		
 	if(brightness == 100){
+		LEDs = color_wheel[curr_col_index];
 		LOW = PERIOD - 1;
 		HIGH = 0;
 	}else if(brightness == 0){
-		HIGH = PERIOD - 1;
-		LOW = 0;	
+		LEDs = DARK; //Turn off LED Brightness is 0
 	}else{
+		LEDs = color_wheel[curr_col_index];
     HIGH = (brightness * PERIOD) / 100;
 		LOW = PERIOD - HIGH;
 	}
 		
   UART0_OutCRLF();
-
-  // Assuming Mode1() is a function to return to the main mode
-  return Mode1();
 }
 
 void Mode2(void){
