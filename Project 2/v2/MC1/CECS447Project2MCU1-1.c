@@ -36,6 +36,7 @@ void Mode1(void);
 void Mode1_Menu(void);
 void ChangeLEDColor();
 void ChangeBrightness();
+char* Color_to_String();
 
 void Mode2(void);
 void Mode2_Menu(void);
@@ -368,4 +369,36 @@ void SysTick_Handler(void) {
 
     NVIC_ST_CURRENT_R = 0; // Reset the current value of the SysTick timer
     NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE; // Restart SysTick timer
+}
+
+char* Color_to_String(){
+	switch(LEDs){
+		case RED:
+			curr_col_index = 1;
+			return "Red";
+		case GREEN:
+			curr_col_index = 2;
+			return "Green";
+		case BLUE:
+			curr_col_index = 3;
+			return "Blue";
+		case YELLOW:
+			curr_col_index = 4;
+			return "Yellow";
+		case CYAN:
+			curr_col_index = 5;
+			return "Cran";
+		case PURPLE:
+			curr_col_index = 6;
+			return "Purple";
+		case WHITE:
+			curr_col_index = 7;
+			return "White";
+		case DARK:
+			curr_col_index = 0;
+			return "Dark";
+		default:
+			return 0;
+			break;
+	}
 }
