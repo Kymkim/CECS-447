@@ -42,31 +42,31 @@
 // 8 bit word length, no parity bits, one stop bit, FIFOs enabled
 // Input: none
 // Output: none
-void UART0_Init(bool RxInt, bool TxInt);
+void UART3_Init(bool RxInt, bool TxInt);
 
 //---------------------OutCRLF---------------------
 // Output a CR,LF to UART to go to a new line
 // Input: none
 // Output: none
-void UART0_OutCRLF(void);
+void UART3_OutCRLF(void);
 
 //------------UART_InChar------------
 // Wait for new serial port input
 // Input: none
 // Output: ASCII code for key typed
-unsigned char UART0_InChar(void);
+unsigned char UART3_InChar(void);
 
 //------------UART_OutChar------------
 // Output 8-bit to serial port
 // Input: letter is an 8-bit ASCII character to be transferred
 // Output: none
-void UART0_OutChar(unsigned char data);
+void UART3_OutChar(unsigned char data);
 
 //------------UART_OutString------------
 // Output String (NULL termination)
 // Input: pointer to a NULL-terminated string to be transferred
 // Output: none
-void UART0_OutString(unsigned char *pt);
+void UART3_OutString(unsigned char *pt);
 
 //------------UART_InString------------
 // Accepts ASCII characters from the serial port
@@ -80,4 +80,4 @@ void UART0_OutString(unsigned char *pt);
 // Input: pointer to empty buffer, size of buffer
 // Output: Null terminated string
 // -- Modified by Agustinus Darmawan + Mingjie Qiu --
-void UART0_InString(unsigned char *bufPt, unsigned short max);
+void UART3_InString(unsigned char *bufPt, unsigned short max);

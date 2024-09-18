@@ -45,52 +45,52 @@ void UART2_Init(bool RxInt, bool TxInt) {
   UART3_CTL_R |= UART_CTL_RXE | UART_CTL_TXE | UART_CTL_UARTEN;  // enable Tx, RX, and UART
 	
 	//To Do Tonight
-	GPIO_PORTD_LOCK_R = GPIO_LOCK_KEY;
-  GPIO_PORTD_AFSEL_R |= 0xC0;           // enable alt funct on PD7-6
-  GPIO_PORTD_DEN_R |= 0xC0;             // enable digital I/O on PD7-6
+	GPIO_PORTC_LOCK_R = GPIO_LOCK_KEY;
+  GPIO_PORTC_AFSEL_R |= 0xC0;           // enable alt funct on PD7-6
+  GPIO_PORTC_DEN_R |= 0xC0;             // enable digital I/O on PD7-6
                                        // configure PD7-6 as UART
   //GPIO_PORTD_PCTL_R = (GPIO_PORTD_PCTL_R & 0xFFFF00FF) + 0x00001100;
-  GPIO_PORTD_PCTL_R = (GPIO_PORTD_PCTL_R & 0x00FFFFFF) + 0x11000000;	
-  GPIO_PORTD_AMSEL_R &= ~0xC0;          // disable analog functionality on PD
+  GPIO_PORTC_PCTL_R = (GPIO_PORTC_PCTL_R & 0x00FFFFFF) + 0x11000000;	
+  GPIO_PORTC_AMSEL_R &= ~0xC0;          // disable analog functionality on PD
 }
 
 //---------------------UART2_OutCRLF---------------------
 // Output a CR,LF to UART2 to go to a new line
 // Input: none
 // Output: none
-void UART2_OutCRLF(void) {
-  UART2_OutChar(CR);
-  UART2_OutChar(LF);
+void UART3_OutCRLF(void) {
+  UART3_OutChar(CR);
+  UART3_OutChar(LF);
 }
 
 //------------UART2_InChar------------
 // Wait for new serial port input on UART2
 // Input: none
 // Output: ASCII code for key typed
-unsigned char UART2_InChar(void) {
-  while ((UART2_FR_R & UART_FR_RXFE) != 0); // wait until the receiving FIFO is not empty
-  return ((unsigned char)(UART2_DR_R & 0xFF));
+unsigned char UART3_InChar(void) {
+  while ((UART3_FR_R & UART_FR_RXFE) != 0); // wait until the receiving FIFO is not empty
+  return ((unsigned char)(UART3_DR_R & 0xFF));
 }
 
 //------------UART2_OutChar------------
 // Output 8-bit to serial port UART2
 // Input: letter is an 8-bit ASCII character to be transferred
 // Output: none
-void UART2_OutChar(unsigned char data) {
-  while ((UART2_FR_R & UART_FR_TXFF) != 0);
-  UART2_DR_R = data;
+void UART3_OutChar(unsigned char data) {
+  while ((UART3_FR_R & UART_FR_TXFF) != 0);
+  UART3_DR_R = data;
 }
 
 //------------UART2_OutString------------
 // Output String (NULL termination) on UART2
 // Input: pointer to a NULL-terminated string to be transferred
 // Output: none
-void UART2_OutString(unsigned char *pt) {
+void UART3_OutString(unsigned char *pt) {
   while (*pt) {
-    UART2_OutChar(*pt);
+    UART3_OutChar(*pt);
     pt++;
   }
-  UART2_OutChar(0); // add the null terminator
+  UART3_OutChar(0); // add the null terminator
 }
 
 //------------UART2_InString------------
@@ -107,24 +107,24 @@ void UART2_OutString(unsigned char *pt) {
 // Input: pointer to an empty buffer, size of buffer
 // Output: Null-terminated string
 // -- Modified by Agustinus Darmawan + Mingjie Qiu --
-void UART2_InString(unsigned char *bufPt, unsigned short max) {
+void UART3_InString(unsigned char *bufPt, unsigned short max) {
   int length = 0;
   char character;
-  character = UART2_InChar();
+  character = UART3_InChar();
   while (character != CR) {
     if (character == BS) { // backspace
       if (length) {
         bufPt--;
         length--;
-        UART2_OutChar(BS);
+        UART3_OutChar(BS);
       }
     } else if (length < max) {
       *bufPt = character;
       bufPt++;
       length++;
-      UART2_OutChar(character);
+      UART3_OutChar(character);
     }
-    character = UART2_InChar();
+    character = UART3_InChar();
   }
   *bufPt = 0; // add null terminator to the end of the string
 }

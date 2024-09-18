@@ -44,6 +44,8 @@ void Mode3(void);
 uint32_t Str_to_UDec(uint8_t str[]);
 	
 #define LEDs 		(*((volatile uint32_t *)0x40025038))
+#define SW1			(0x10)
+#define SW2			(0x01)
 		
 	
 bool end_of_str = false;
@@ -114,8 +116,13 @@ void UART0_Handler(void){
 
 void UART2_Handler(void){
 	if(UART2_RIS_R & UART_RIS_RXRIS){
-		if ((UART2_FR_R & UART_FR_RXFE) == 0)
+		if ((UART2_FR_R & UART_FR_RXFE) == 0){
 			LEDs = UART2_DR_R;
+			UART0_OutString((uint8_t *)"Mode 2 MCU2");
+			UART0_OutCRLF();
+			UART0_OutString((uint8_t *)"In color Wheel State S1 S2");
+			UART0_OutCRLF();
+		}
 		UART2_ICR_R = UART_ICR_RXIC;
 	}
 }
@@ -271,9 +278,48 @@ void ChangeBrightness(){
 }
 
 
+
 void Mode2(void){
-	UART2_OutChar('2');
+	UART2_OutChar('2'); //Send Character 2 to UART
 	Mode2_Menu();
+	UART0_OutString((uint8_t *)"Current color: ");
+	UART0_OutString((uint8_t *)LEDGetColorString());
+	while(1){
+		while (!end_of_str) { // wait until the whole string is received.
+			WaitForInterrupt();
+		}
+		end_of_str = false;
+		str_idx = 0;
+		UART0_OutCRLF();
+		if(string[0] == '^'){
+			break; //Leave loop if input is ^
+		}
+	}
+}
+
+void GPIOPortF_Handler(void){		
+	// simple debouncing code: generate 20ms to 30ms delay
+	for (uint32_t time=0;time<80000;time++) {}		
+		
+	if(GPIO_PORTF_RIS_R & SW2)
+	{
+		curr_col_index = (curr_col_index+1)%8;
+		LEDs = color_wheel[curr_col_index];
+	}
+	
+	if(GPIO_PORTF_RIS_R & SW1)
+	{
+		GPIO_PORTF_ICR_R = SW1;
+		UART2_OutChar(LEDs);
+		UART0_OutCRLF();
+		UART0_OutString((uint8_t *)"Mode 2 MCU1: press ^ to exit this mode ");
+		UART0_OutCRLF();
+		UART0_OutString((uint8_t *)"Current color:  ");
+		UART0_OutString((uint8_t *)LEDGetColorString());
+		UART0_OutCRLF();
+		UART0_OutString((uint8_t *)"Waiting for color code from MCU2  ");
+		UART0_OutCRLF();
+  }
 }
 
 void Mode2_Menu(void){
