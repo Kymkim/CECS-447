@@ -38,6 +38,13 @@ void LEDSW_Init(void){
 
 }
 
+void DisableSysTick(){
+	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE;
+}
+
+void EnableSysTick(){
+	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE;
+}
 
 
 

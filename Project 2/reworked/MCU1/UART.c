@@ -36,7 +36,7 @@ void UART2_Init(bool RxInt, bool TxInt){
   UART2_CTL_R |= UART_CTL_UARTEN|UART_CTL_RXE|UART_CTL_TXE; // enable UART, Rx, Tx
 	
 	if ( RxInt | TxInt) {
-		NVIC_PRI8_R = (NVIC_PRI8_R&~0x0000F000)|0x00008000; // bits 23-21, priority 5
+		NVIC_PRI8_R = (NVIC_PRI8_R&~0x0000F000)|0x00002000; // bits 23-21, priority 5
 		NVIC_EN1_R = NVIC_EN1_UART2;           // enable interrupt 5 in NVIC
 	}
 		

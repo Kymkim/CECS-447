@@ -47,10 +47,9 @@ const	uint8_t color_wheel[] = {DARK, RED, GREEN, BLUE, YELLOW, CYAN, PURPLE, WHI
 
 bool end_of_str = false;
 uint8_t string[MAX_STR_LEN];
-uint8_t str_idx = 0;
-uint8_t CURRENT_MODE = 0;
-uint8_t COLOR_INDEX = 0;
-uint8_t MODE = 0;
+uint8_t str_idx = 0;;
+volatile uint8_t COLOR_INDEX = 0;
+volatile uint8_t MODE = 0;
 
 extern void DisableInterrupts(void);
 extern void EnableInterrupts(void);  
@@ -61,7 +60,9 @@ void Mode2_Menu();
 void Mode2_MenuTX();
 void Mode2_MenuRX();
 void Mode2();
+
 char * LEDtoSTR();
+int LEDtoINDEX(void);
 
 int main(void){	
   DisableInterrupts();
@@ -70,8 +71,9 @@ int main(void){
   UART2_Init(true,false);   // initialize UART with RX interrupt
 	//GPIO_PortF_Init();			  // initialize port F
 	LEDSW_Init();
+	DisableSysTick();
   EnableInterrupts();       // needed for TExaS
-	LED = DARK;
+	LED = color_wheel[COLOR_INDEX];
   while(1){
 		Main_Menu();
 		while (!end_of_str) { // wait until the whole string is received.
@@ -83,6 +85,7 @@ int main(void){
 		switch(string[str_idx]){
 			case '1':
 				MODE=1;
+				EnableSysTick();
 				UART0_OutString((uint8_t *)"Will Add Later :)");
 				UART0_OutCRLF();
 				break;
@@ -98,6 +101,7 @@ int main(void){
 
 //Modes
 void Mode2(){
+	UART2_OutChar('2');
 	while(1){
 		Mode2_MenuTX();
 		while (!end_of_str) { // wait until the whole string is received.
@@ -105,7 +109,10 @@ void Mode2(){
 		}
 		end_of_str = false;
 		str_idx = 0;
-		if(string[0] == '^') break;
+		if(string[0] == '^'){
+			UART2_OutChar('^');
+			MODE=0;
+		}
 	}
 }
 
@@ -136,7 +143,6 @@ void Mode2_MenuRX(){
 }
 void Mode2_MenuTX(){
 	UART0_OutCRLF();
-	UART2_OutChar('2');
 	UART0_OutString((uint8_t *)"Mode 2 MCU1: press ^ to exit this mode");
 	UART0_OutCRLF();
 	UART0_OutString((uint8_t *)"In color wheel state");
@@ -165,6 +171,19 @@ char * LEDtoSTR(void){
 		default: return "NULL"; break;
 	}
 }
+int LEDtoINDEX(void){
+	switch(LED){
+		case(DARK): return 0; break;
+		case(RED): return 1; break;
+		case(GREEN): return 2; break;
+		case(BLUE): return 3; break;
+		case(YELLOW): return 4; break;
+		case(CYAN): return 5; break;
+		case(PURPLE): return 6; break;
+		case(WHITE): return 7; break;
+		default: return 0; break;
+	}
+}
 
 //Interrupt Handlers
 void SysTick_Handler(void) {
@@ -189,7 +208,11 @@ void GPIOPortF_Handler(void){
 	{
 		GPIO_PORTF_ICR_R = SW2;
 		if(MODE==2){
-			COLOR_INDEX = (COLOR_INDEX+1)%8;
+			if((COLOR_INDEX+1) > 7){
+				COLOR_INDEX = 0;
+			}else{
+				COLOR_INDEX += 1;
+			}
 			LED = color_wheel[COLOR_INDEX];
 			//Mode2_Menu();
 		}
@@ -199,7 +222,7 @@ void GPIOPortF_Handler(void){
 	{
 		GPIO_PORTF_ICR_R = SW1;
 		if(MODE==2){
-			UART2_OutChar(LED);	
+			UART2_OutChar(color_wheel[COLOR_INDEX]);	
 			Mode2_MenuRX();
 		}
 	}
@@ -209,6 +232,7 @@ void UART2_Handler(void){
 		if ((UART2_FR_R&UART_FR_RXFE) == 0){
 			if(MODE==2){
 				LED = UART2_DR_R&0xFF;
+				COLOR_INDEX = LEDtoINDEX();
 				Mode2_MenuTX();
 			}
 		}

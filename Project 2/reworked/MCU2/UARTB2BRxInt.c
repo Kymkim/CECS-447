@@ -47,9 +47,8 @@ const	uint8_t color_wheel[] = {DARK, RED, GREEN, BLUE, YELLOW, CYAN, PURPLE, WHI
 bool end_of_str = false;
 uint8_t string[MAX_STR_LEN];
 uint8_t str_idx = 0;
-uint8_t CURRENT_MODE = 0;
-uint8_t COLOR_INDEX = 0;
-uint8_t MODE = 0;
+volatile uint8_t COLOR_INDEX = 0;
+volatile uint8_t MODE = 0;
 
 extern void DisableInterrupts(void);
 extern void EnableInterrupts(void);  
@@ -63,6 +62,7 @@ void Mode2_MenuTX();
 void Mode2_MenuRX();
 
 char* LEDtoSTR();
+int LEDtoINDEX(void);
 
 int main(void){	
   DisableInterrupts();
@@ -71,7 +71,7 @@ int main(void){
   UART3_Init(true,false);   // initialize UART with RX interrupt
 	GPIO_PortF_Init();			  // initialize port F
   EnableInterrupts();       // needed for TExaS
-	LED = DARK;
+	LED = color_wheel[COLOR_INDEX];
 	UART0_OutCRLF();
   while(1){
 		//LED = UART3_InChar();
@@ -156,9 +156,13 @@ void GPIOPortF_Handler(void)
 	
   if(GPIO_PORTF_RIS_R & SW2)
 	{
-		GPIO_PORTF_ICR_R = SW2;
+	  GPIO_PORTF_ICR_R = SW2;
 		if(MODE==2){
-			COLOR_INDEX = (COLOR_INDEX+1)%8;
+			if((COLOR_INDEX+1) > 7){
+				COLOR_INDEX = 0;
+			}else{
+				COLOR_INDEX += 1;
+			}
 			LED = color_wheel[COLOR_INDEX];
 		}
 	}
@@ -167,7 +171,7 @@ void GPIOPortF_Handler(void)
 	{
 		GPIO_PORTF_ICR_R = SW1;
 		if(MODE==2){
-			UART3_OutChar(LED);		
+			UART3_OutChar(color_wheel[COLOR_INDEX]);		
 			Mode2_MenuRX();
 		}
 	}
@@ -176,12 +180,14 @@ void UART3_Handler(void){
   if(UART3_RIS_R&UART_RIS_RXRIS){       // received one item
 		if ((UART3_FR_R&UART_FR_RXFE) == 0){
 			if(MODE==2){
-				LED = UART3_DR_R&0xFF;
 				if((UART3_DR_R&0xFF)=='^'){
-					MODE=0;
-					Main_Menu();
-				}else{
+					LED = UART3_DR_R&0xFF;
+					COLOR_INDEX = LEDtoINDEX();
 					Mode2_MenuTX();
+				}else{
+					LED = UART3_DR_R&0xFF;
+					COLOR_INDEX = LEDtoINDEX();
+					Mode2_MenuTX();	
 				}
 			}
 		}
@@ -227,3 +233,17 @@ char * LEDtoSTR(void){
 		default: return "NULL"; break;
 	}
 }
+int LEDtoINDEX(void){
+	switch(LED){
+		case(DARK): return 0; break;
+		case(RED): return 1; break;
+		case(GREEN): return 2; break;
+		case(BLUE): return 3; break;
+		case(YELLOW): return 4; break;
+		case(CYAN): return 5; break;
+		case(PURPLE): return 6; break;
+		case(WHITE): return 7; break;
+		default: return 0; break;
+	}
+}
+

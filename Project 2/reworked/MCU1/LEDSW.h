@@ -8,3 +8,5 @@ extern volatile unsigned long HIGH,LOW;
 
 void LEDSW_Init(void);
 char* LEDGetColorString();
+void DisableSysTick();
+void EnableSysTick();
