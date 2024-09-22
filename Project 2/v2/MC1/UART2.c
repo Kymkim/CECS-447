@@ -17,10 +17,11 @@
 void UART2_Init(bool RxInt, bool TxInt) {
   SYSCTL_RCGCUART_R |= SYSCTL_RCGCUART_R2;  // activate UART2
   SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOD;  // activate port D
-
+	while((SYSCTL_RCGC2_R&SYSCTL_RCGC2_GPIOD) == 0){}; 
+	
   UART2_CTL_R = 0;                      // disable UART
-  UART2_IBRD_R = 81;                    // IBRD = int(50,000,000 / (16 * 38400)) = int(81.3802)
-  UART2_FBRD_R = 24;                    // FBRD = int(0.3802 * 64 + 0.5) = 8.228
+  UART2_IBRD_R = 81; //81                    // IBRD = int(50,000,000 / (16 * 38400)) = int(81.3802)
+  UART2_FBRD_R = 24;     //24               // FBRD = int(0.3802 * 64 + 0.5) = 8.228
   UART2_LCRH_R = UART_LCRH_WLEN_8;      // 8-bit word length (no parity bits, one stop bit, FIFOs)
 
   // Take care of interrupt setup
@@ -37,7 +38,9 @@ void UART2_Init(bool RxInt, bool TxInt) {
   }
   
   UART2_CTL_R |= UART_CTL_RXE | UART_CTL_TXE | UART_CTL_UARTEN;  // enable Tx, RX, and UART
+	
 	GPIO_PORTD_LOCK_R = GPIO_LOCK_KEY;
+	GPIO_PORTD_CR_R |= 0xFF;
   GPIO_PORTD_AFSEL_R |= 0xC0;           // enable alt funct on PD7-6
   GPIO_PORTD_DEN_R |= 0xC0;             // enable digital I/O on PD7-6
                                        // configure PD7-6 as UART

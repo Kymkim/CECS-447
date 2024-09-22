@@ -22,33 +22,23 @@ Dialog DLL:      TCM.DLL V1.56.4.0
  
 <h2>Project:</h2>
 C:\Users\cabra\Documents\GitHub\CECS-447\CECS-447\Project 2\v2\MC2\UARTPC2B.uvprojx
-Project File Date:  09/17/2024
+Project File Date:  09/20/2024
 
 <h2>Output:</h2>
 *** Using Compiler 'V6.21', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
 Rebuild target 'UARTPC2B'
-CECS447Project2MCU1-1.c(55): error: call to undeclared function 'UART3_Init'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-   55 |         UART3_Init(true,false);  // for MCU1<->MCU2
-      |         ^
-CECS447Project2MCU1-1.c(55): note: did you mean 'UART0_Init'?
-./UART3.h(45): note: 'UART0_Init' declared here
-   45 | void UART0_Init(bool RxInt, bool TxInt);
-      |      ^
-CECS447Project2MCU1-1.c(61): error: call to undeclared function 'UART3_InChar'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-   61 |                 switch(UART3_InChar()){
-      |                        ^
-CECS447Project2MCU1-1.c(61): note: did you mean 'UART0_InChar'?
-./UART3.h(57): note: 'UART0_InChar' declared here
-   57 | unsigned char UART0_InChar(void);
-      |               ^
-2 errors generated.
-compiling CECS447Project2MCU1-1.c...
-compiling LEDSW.c...
 compiling PLL.c...
-compiling UART0.c...
 compiling UART3.c...
+compiling LEDSW.c...
+compiling UART0.c...
+compiling UART2.c...
 assembling startup.s...
-".\UARTPC2B.axf" - 2 Error(s), 0 Warning(s).
+compiling CECS447Project2MCU1-1.c...
+compiling UART1.c...
+linking...
+Program Size: Code=3210 RO-data=214 RW-data=0 ZI-data=1152  
+FromELF: creating hex file...
+".\UARTPC2B.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -71,7 +61,6 @@ Package Vendor: Keil
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE@5.6.0
-Target not created.
 Build Time Elapsed:  00:00:01
 </pre>
 </body>

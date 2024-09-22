@@ -6,7 +6,9 @@
 
 #include "PLL.h"
 #include "UART0.h"
-#include "UART3.h"
+//#include "UART3.h"
+#include "UART2.h"
+//#include "UART1.h"
 #include "LEDSW.h"
 #include "tm4c123gh6pm.h"
 #include <stdint.h>
@@ -32,6 +34,9 @@ extern void EnableInterrupts(void);
 extern void WaitForInterrupt(void);
 extern void DisableInterrupts(void);
 void Beginning_Prompt(void);
+
+char* Color_to_String();
+
 void Mode2_Menu();
 
 void Mode2(void);
@@ -49,25 +54,41 @@ uint8_t string[MAX_STR_LEN];
 uint8_t str_idx = 0;
 uint8_t brightness = 0;
 uint8_t curr_col_index = 0;
+unsigned char mode_inp = 0;
+unsigned char x = 0;
 
 int main(void){
 	DisableInterrupts();
   PLL_Init();
   UART0_Init(true,false);  // for PC<->MCU1
-	UART3_Init(true,false);  // for MCU1<->MCU2
+	UART2_Init(true,false);
 	LEDSW_Init();  // Initialize the onboard three LEDs and two push buttons
+	//UART3_Init(true,false);  // for MCU1<->MCU2
 	EnableInterrupts();
 	
 	Beginning_Prompt();
   while(1){
-		switch(UART3_InChar()){ //Input From UART3. MCU to MCU
+		
+		//DEBUG LOG:
+		//> Stuck executing UART3_InChar() Maybe MCU 1 is not sending any? 
+		//Nope. MCU 1 sends the data to MCU 2. UART_DR_R gets updated with the correct data
+		//> The busy waiting for UART3_InChar() might not be working properly.
+		//It stuck in busyw wait for the input. RXFE flag does not get cleared. 
+		
+		//Data arrives at UART_DR_R from MCU 1 to MCU 2
+		//But the RXFE flag does not get cleared...
+		switch(x){ //Input From UART3. MCU to MCU
 			case '2':
-				Mode2();
+				UART0_OutString((uint8_t *)"Mode 2 MCU2");
+				UART0_OutCRLF();
+				UART0_OutString((uint8_t *)"Waiting for color code from MCU1");
+				UART0_OutCRLF();
 				break;
 			case '3': 
 				Mode3();
 				break;
 			default:
+				WaitForInterrupt();
 				break; 
 		}
 		UART0_OutCRLF();
@@ -100,18 +121,23 @@ void UART0_Handler(void){
   }
 }
 
-void UART3_Handler(void){
-	if(UART3_RIS_R & UART_RIS_RXRIS){
-		if ((UART3_FR_R & UART_FR_RXFE) == 0){
-			LEDs = UART3_DR_R;
-			UART0_OutString((uint8_t *)"Mode 2 MCU2");
-			UART0_OutCRLF();
-			UART0_OutString((uint8_t *)"In color Wheel State SW1 SW2");
-			UART0_OutCRLF();
+void UART2_Handler(void){
+	if(UART2_RIS_R & UART_RIS_RXRIS){
+		if ((UART2_FR_R & UART_FR_RXFE) == 0){
+			x = UART2_DR_R;
 		}
-		UART3_ICR_R = UART_ICR_RXIC;
+		UART2_ICR_R = UART_ICR_RXIC;
 	}
 }
+
+//void UART3_Handler(void){
+//	if(UART3_RIS_R & UART_RIS_RXRIS){
+//		if ((UART3_FR_R & UART_FR_RXFE) == 0){
+//			x = UART3_DR_R&0xFF;
+//		}
+//		UART3_ICR_R = UART_ICR_RXIC;
+//	}	
+//}
 
 void GPIOPortF_Handler(void){
 	for (uint32_t time=0;time<80000;time++) {}		
@@ -125,12 +151,12 @@ void GPIOPortF_Handler(void){
 	if(GPIO_PORTF_RIS_R & SW1)
 	{
 		GPIO_PORTF_ICR_R = SW1;
-		UART3_OutChar(LEDs);
+		UART2_OutChar(LEDs);
 		UART0_OutCRLF();
 		UART0_OutString((uint8_t *)"Mode 2 MCU2:");
 		UART0_OutCRLF();
 		UART0_OutString((uint8_t *)"Current color:  ");
-		UART0_OutString((uint8_t *)LEDGetColorString());
+		UART0_OutString((uint8_t *)Color_to_String());
 		UART0_OutCRLF();
 		UART0_OutString((uint8_t *)"Waiting for color code from MCU1");
 		UART0_OutCRLF();
@@ -138,14 +164,47 @@ void GPIOPortF_Handler(void){
 }
 
 void Mode2(){
-	UART0_OutString((uint8_t *)"Mode 2 MCU2");
-	UART0_OutCRLF();
-	UART0_OutString((uint8_t *)"Waiting for color code from MCU1");
-	UART0_OutCRLF();
+
 }
 
 void Mode2_Menu(){
 
+}
+
+void Mode3(){
+	
+}
+
+char* Color_to_String(){
+	switch(LEDs){
+		case RED:
+			curr_col_index = 1;
+			return "Red";
+		case GREEN:
+			curr_col_index = 2;
+			return "Green";
+		case BLUE:
+			curr_col_index = 3;
+			return "Blue";
+		case YELLOW:
+			curr_col_index = 4;
+			return "Yellow";
+		case CYAN:
+			curr_col_index = 5;
+			return "Cran";
+		case PURPLE:
+			curr_col_index = 6;
+			return "Purple";
+		case WHITE:
+			curr_col_index = 7;
+			return "White";
+		case DARK:
+			curr_col_index = 0;
+			return "Dark";
+		default:
+			return 0;
+			break;
+	}
 }
 
 void Beginning_Prompt(void){
@@ -156,3 +215,5 @@ void Beginning_Prompt(void){
 	UART0_OutString((uint8_t *)"Waiting for command from MCU1");
 	UART0_OutCRLF();
 }
+
+

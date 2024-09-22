@@ -30,23 +30,18 @@ const	uint8_t color_wheel[] = {DARK, RED, GREEN, BLUE, YELLOW, CYAN, PURPLE, WHI
 extern void EnableInterrupts(void);
 extern void WaitForInterrupt(void);
 extern void DisableInterrupts(void);
-void Display_Menu(void);
-
 void Mode1(void);
+void Mode2(void);
+void Mode3(void);
+void Display_Menu(void);
 void Mode1_Menu(void);
 void ChangeLEDColor();
 void ChangeBrightness();
-char* Color_to_String();
-
-void Mode2(void);
-void Mode2_Menu(void);
-
-void Mode3(void);
 uint32_t Str_to_UDec(uint8_t str[]);
 	
 #define LEDs 		(*((volatile uint32_t *)0x40025038))
-#define SW1			(0x10)
-#define SW2			(0x01)
+#define SW1       0x10
+#define SW2       0x01
 		
 	
 bool end_of_str = false;
@@ -54,17 +49,19 @@ uint8_t string[MAX_STR_LEN];
 uint8_t str_idx = 0;
 uint8_t brightness = 0;
 uint8_t curr_col_index = 0;
+uint8_t curr_mode = 0;
 
 int main(void){
 	DisableInterrupts();
   PLL_Init();
   UART0_Init(true,false);  // for PC<->MCU1
-	UART2_Init(true,false);  // for MCU1<->MCU2
+	UART2_Init(true,false);  // for MCU1<->MCU22
 	LEDSW_Init();  // Initialize the onboard three LEDs and two push buttons
 	EnableInterrupts();
 	
   while(1){
 		// displays the main menu 
+		//UART0_OutChar(UART2_InChar());
 		Display_Menu(); 
 		while (!end_of_str) { // wait until the whole string is received.
 			WaitForInterrupt();
@@ -119,14 +116,11 @@ void UART2_Handler(void){
 	if(UART2_RIS_R & UART_RIS_RXRIS){
 		if ((UART2_FR_R & UART_FR_RXFE) == 0){
 			LEDs = UART2_DR_R;
-			UART0_OutString((uint8_t *)"Mode 2 MCU2");
-			UART0_OutCRLF();
-			UART0_OutString((uint8_t *)"In color Wheel State S1 S2");
-			UART0_OutCRLF();
 		}
 		UART2_ICR_R = UART_ICR_RXIC;
 	}
 }
+
 
 void Display_Menu(void){
 	UART0_OutString((uint8_t *)"Welcome to CECS 447 Project 2 - UART");
@@ -145,6 +139,20 @@ void Display_Menu(void){
 	UART0_OutCRLF();
 	UART0_OutString((uint8_t *)"(Please choose from 1, 2 ,3)");
 }
+
+void Mode1_Menu(void){
+	UART0_OutString((uint8_t *)"Mode 1 Menu");
+	UART0_OutCRLF();
+	UART0_OutString((uint8_t *)"Please select an option from the following list (enter 1 or 2 or 3)");
+	UART0_OutCRLF();
+	UART0_OutString((uint8_t *)"1. Choose an LED color");
+	UART0_OutCRLF();
+	UART0_OutString((uint8_t *)"2. Change the brightness of current LED(s)");
+	UART0_OutCRLF();
+	UART0_OutString((uint8_t *)"3. Exit");
+	UART0_OutCRLF();
+}
+
 
 void Mode1(void){
 	UART0_OutCRLF();
@@ -177,21 +185,8 @@ void Mode1(void){
 	}
 }
 
-void Mode1_Menu(void){
-	UART0_OutString((uint8_t *)"Mode 1 Menu");
-	UART0_OutCRLF();
-	UART0_OutString((uint8_t *)"Please select an option from the following list (enter 1 or 2 or 3)");
-	UART0_OutCRLF();
-	UART0_OutString((uint8_t *)"1. Choose an LED color");
-	UART0_OutCRLF();
-	UART0_OutString((uint8_t *)"2. Change the brightness of current LED(s)");
-	UART0_OutCRLF();
-	UART0_OutString((uint8_t *)"3. Exit");
-	UART0_OutCRLF();
-}
-
 void ChangeLEDColor(){
-UART0_OutCRLF();
+	UART0_OutCRLF();
 	end_of_str = false;
   str_idx = 0;
 	UART0_OutCRLF();
@@ -278,32 +273,47 @@ void ChangeBrightness(){
   UART0_OutCRLF();
 }
 
-
-
-void Mode2(void){
-	UART2_OutChar('2'); //Send Character 2 to UART
-	Mode2_Menu();
-	UART0_OutString((uint8_t *)"Current color: ");
-	UART0_OutString((uint8_t *)LEDGetColorString());
-	while(1){
-		while (!end_of_str) { // wait until the whole string is received.
-			WaitForInterrupt();
-		}
-		end_of_str = false;
-		str_idx = 0;
-		UART0_OutCRLF();
-		if(string[0] == '^'){
-			break; //Leave loop if input is ^
-		}
-	}
+void Mode2_Menu(void){
+	UART0_OutCRLF();
+	UART0_OutString((uint8_t *)"Mode 2 MCU1: press ^ to exit this mode ");
+	UART0_OutCRLF();
+	UART0_OutString((uint8_t *)"In color Wheel State.  ");
+	UART0_OutCRLF();
+	UART0_OutString((uint8_t *)"Please press sw2 to go through the colors in  ");
+	UART0_OutCRLF();
+	UART0_OutString((uint8_t *)"the following color wheel: Dark, Red, Green, ");
+	UART0_OutCRLF();
+	UART0_OutString((uint8_t *)"Blue, Yellow, Cran, Purple, White. ");
+	UART0_OutCRLF();
+	UART0_OutString((uint8_t *)"Once a color is selected, press sw1 to send  ");
+	UART0_OutCRLF();
+	UART0_OutString((uint8_t *)"the color to MCU2.");
+	UART0_OutCRLF();
+	UART0_OutString((uint8_t *)"Current color:  ");
 }
 
-void GPIOPortF_Handler(void){		
+void Mode2(void){
+	curr_mode = 2;
+	UART2_OutChar('2');
+	Mode2_Menu();
+	UART0_OutString((uint8_t *)"Current color - not yet implemented");
+	UART0_OutCRLF();
+	while(!end_of_str){
+		WaitForInterrupt();
+	}
+	end_of_str=false;
+	curr_col_index=0;
+	UART0_OutCRLF();
+}
+
+void GPIOPortF_Handler(void)
+{		
 	// simple debouncing code: generate 20ms to 30ms delay
-	for (uint32_t time=0;time<80000;time++) {}		
-		
-	if(GPIO_PORTF_RIS_R & SW2)
+	for (uint32_t time=0;time<80000;time++) {}
+	
+  if(GPIO_PORTF_RIS_R & SW2)
 	{
+		GPIO_PORTF_ICR_R = SW2;
 		curr_col_index = (curr_col_index+1)%8;
 		LEDs = color_wheel[curr_col_index];
 	}
@@ -311,29 +321,20 @@ void GPIOPortF_Handler(void){
 	if(GPIO_PORTF_RIS_R & SW1)
 	{
 		GPIO_PORTF_ICR_R = SW1;
-		UART2_OutChar(LEDs);
-		UART0_OutCRLF();
-		UART0_OutString((uint8_t *)"Mode 2 MCU1: press ^ to exit this mode ");
-		UART0_OutCRLF();
-		UART0_OutString((uint8_t *)"Current color:  ");
-		UART0_OutString((uint8_t *)LEDGetColorString());
-		UART0_OutCRLF();
-		UART0_OutString((uint8_t *)"Waiting for color code from MCU2  ");
-		UART0_OutCRLF();
-  }
-}
-
-void Mode2_Menu(void){
-	UART0_OutString((uint8_t *)"Mode 2 MCU1: press ^ to exit this mode");
-	UART0_OutCRLF();
-	UART0_OutString((uint8_t *)"In color Wheel State");
-	UART0_OutCRLF();
-	UART0_OutString((uint8_t *)"Please press sw2 to go through the colors in the following color wheel: Dark, Red, Green, Blue, Yellow, Cyan, Purple, White");
-	UART0_OutCRLF();
-	UART0_OutString((uint8_t *)"Once a color is selected, press sw1 to send the color to MCU2");
-	UART0_OutCRLF();
-	UART0_OutString((uint8_t *)"Mode 1 Menu");
-	UART0_OutCRLF();
+		if(curr_mode == 2){
+			UART2_OutChar(LEDs);
+			UART0_OutCRLF();
+			UART0_OutString((uint8_t *)"Mode 2 MCU1: press ^ to exit this mode ");
+			UART0_OutCRLF();
+			UART0_OutString((uint8_t *)"Current color: Not Yet Implemented ");
+			
+			//Show Current Color ToDo Later
+			
+			UART0_OutCRLF();
+			UART0_OutString((uint8_t *)"Waiting for color code from MCU2  ");
+			UART0_OutCRLF();		
+		}
+	}
 }
 
 void Mode3(void){
@@ -369,36 +370,4 @@ void SysTick_Handler(void) {
 
     NVIC_ST_CURRENT_R = 0; // Reset the current value of the SysTick timer
     NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE; // Restart SysTick timer
-}
-
-char* Color_to_String(){
-	switch(LEDs){
-		case RED:
-			curr_col_index = 1;
-			return "Red";
-		case GREEN:
-			curr_col_index = 2;
-			return "Green";
-		case BLUE:
-			curr_col_index = 3;
-			return "Blue";
-		case YELLOW:
-			curr_col_index = 4;
-			return "Yellow";
-		case CYAN:
-			curr_col_index = 5;
-			return "Cran";
-		case PURPLE:
-			curr_col_index = 6;
-			return "Purple";
-		case WHITE:
-			curr_col_index = 7;
-			return "White";
-		case DARK:
-			curr_col_index = 0;
-			return "Dark";
-		default:
-			return 0;
-			break;
-	}
 }

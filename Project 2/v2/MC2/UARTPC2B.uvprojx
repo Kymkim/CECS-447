@@ -416,9 +416,14 @@
               <FilePath>.\UART3.c</FilePath>
             </File>
             <File>
-              <FileName>UART3.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\UART3.h</FilePath>
+              <FileName>UART2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\v1\UART2.c</FilePath>
+            </File>
+            <File>
+              <FileName>UART1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\v1\UART1.c</FilePath>
             </File>
           </Files>
         </Group>
