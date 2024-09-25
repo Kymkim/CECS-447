@@ -2,7 +2,8 @@
 // Runs on TM4C123
 // Simple device driver for the UART. This is an example code for UART board to board communication.
 // board to board communitation uses UART3
-// By Dr.Min He
+// By Oliver Cabral and Jason Chan
+
 #include "UART.h"
 #include "tm4c123gh6pm.h"
 #include <stdint.h>
@@ -21,8 +22,8 @@ void UART3_Init(bool RxInt, bool TxInt){
 	while((SYSCTL_RCGC2_R&SYSCTL_RCGC2_GPIOC) == 0){}; 
 		
   UART3_CTL_R = 0;                     // reset UART3
-  UART3_IBRD_R = 81;                    // IBRD = int(16,000,000 / (16 * 115,200)) = int(8.68)
-  UART3_FBRD_R = 24;                     // FBRD = int(0.68 * 64 + 0.5) = 44
+  UART3_IBRD_R = 81;                    
+  UART3_FBRD_R = 24;                     
                                         // 8 bit word length (no parity bits, one stop bit, FIFOs)
   UART3_LCRH_R = UART_LCRH_WLEN_8;
 		
