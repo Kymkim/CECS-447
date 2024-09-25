@@ -176,7 +176,7 @@ void Mode3(){
 	UART2_OutChar(CR);
 	MODE=3;
 	UART0_OutCRLF();
-	UART0_OutString((uint8_t *)"Mode 3 MCU1: Chat Room ");
+	UART0_OutString((uint8_t *)"Mode 3 MCU 2: Chat Room ");
 	UART0_OutCRLF();
 	UART0_OutString((uint8_t *)"Press sw1 at any time to exit the chat room. ");
 	UART0_OutCRLF();

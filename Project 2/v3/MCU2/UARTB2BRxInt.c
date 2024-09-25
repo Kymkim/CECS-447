@@ -79,7 +79,7 @@ int main(void){
   EnableInterrupts();       // needed for TExaS
 	LED = color_wheel[COLOR_INDEX];
 	UART0_OutCRLF();
-  while(1){
+  while(1){	
 		//LED = UART3_InChar();
 		Main_Menu();
 		in_str_idx=0;
@@ -111,7 +111,11 @@ void Mode2(){
 	Mode2_MenuRX();
 }
 void Mode3(){
-	UART0_OutString((uint8_t *) "Mode 3 Entered...");
+	UART0_OutString((uint8_t *)"Mode 3 MCU 2: Chat Room ");
+	UART0_OutCRLF();
+	UART0_OutString((uint8_t *)"Press sw1 at any time to exit the chat room. ");
+	UART0_OutCRLF();
+	UART0_OutString((uint8_t *)"Waiting for a message from MCU 1");
 	UART0_OutCRLF();
 	while(!QUIT_CHAT){
 		//Waiting For Message
@@ -226,6 +230,12 @@ void GPIOPortF_Handler(void)
 			UART3_OutChar(color_wheel[COLOR_INDEX]);	
 			//UART3_OutChar(CR);			
 			Mode2_MenuRX();
+		}
+		if(MODE==3){
+			QUIT_CHAT = 1;
+			MODE = 0;
+			UART3_OutChar(0xFF);
+			UART3_OutChar(CR);
 		}
 	}
 }
