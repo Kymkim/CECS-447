@@ -1,8 +1,8 @@
 // UART.h
 // Runs on TM4C123, device driver for the UART.
-// board to board communitation use UART1
+// board to board communitation use UART3
 // Ground connected ground in the USB cable
-// By. Dr. Min He
+// By. Oliver Cabral and Jason Chan
 
 #include <stdbool.h>  // for C boolean data type
 
