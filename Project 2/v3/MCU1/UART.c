@@ -2,7 +2,8 @@
 // Runs on TM4C123
 // Simple device driver for the UART. This is an example code for UART board to board communication.
 // board to board communitation uses UART2
-// By Dr.Min He
+// by Oliver Cabral and Jason Chan
+
 #include "UART.h"
 #include "tm4c123gh6pm.h"
 #include <stdint.h>
