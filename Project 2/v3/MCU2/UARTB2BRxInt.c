@@ -112,7 +112,7 @@ void Mode2(){
 	Mode2_MenuRX();
 }
 void Mode3(){
-	UART0_OutString((uint8_t *)"Mode 3 MCU1: Chat Room ");
+	UART0_OutString((uint8_t *)"Mode 3 MCU 2: Chat Room ");
 	UART0_OutCRLF();
 	UART0_OutString((uint8_t *)"Press sw1 at any time to exit the chat room. ");
 	UART0_OutCRLF();
@@ -231,6 +231,12 @@ void GPIOPortF_Handler(void)
 			UART3_OutChar(color_wheel[COLOR_INDEX]);	
 			//UART3_OutChar(CR);			
 			Mode2_MenuRX();
+		}
+		if(MODE==3){
+			QUIT_CHAT=1;
+			MODE=0;
+			UART3_OutChar(0xFF);
+			UART3_OutChar(CR);
 		}
 	}
 }
