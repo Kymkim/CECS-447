@@ -74,6 +74,7 @@ int main(void) {
     UART0_OutChar(LF);
 		
 		if(MODE == 0){	//DEMO MODE
+			LED = Red;
 			switch (control_symbol){
 				case '8':	//Figure 8 and stop
 					Figure8();
@@ -94,7 +95,7 @@ int main(void) {
 					break;
 			}
 		}else if(MODE == 1){  //FREE ROAM
-			
+			LED = Blue;
 		}
 	}
 }
