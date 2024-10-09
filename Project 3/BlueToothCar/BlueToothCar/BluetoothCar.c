@@ -10,13 +10,14 @@
 // Header files 
 #include "tm4c123gh6pm.h"
 #include <stdint.h>
-#include "PWM.h"
-#include "GPIO.h"
+#include "Motors.h"
+#include "PLL.h"
 #include <stdio.h>
 #include <math.h>
 
 #define SW1       0x10
 #define SW2       0x01
+#define LED (*((volatile unsigned long *)0x40025038)) 
 
 // Color    LED(s) PortF
 // dark     ---    0
@@ -45,58 +46,116 @@ void BLT_InString(unsigned char *bufPt);
 void UART0_OutChar(unsigned char data);
 void UART0_OutString(unsigned char *pt);
 void PortF_Init(void);
-void Delay(float seconds);
+void Delay();
 
 void Figure8();
 void Circle();
 void Square();
 void Z();
 
+uint16_t speed = 100;
+
+unsigned char control_symbol; 
+
 //Flags
-volatile uint8_t MODE = 0; //DEMO MODE = 0; FREE DRIVE MODE = 1
+volatile uint8_t MODE = 1; 
+volatile uint8_t MODE_SW = 1;
 
 int main(void) {
-	unsigned char control_symbol; // for bluetooth controlled LEDs
+	// for bluetooth controlled LEDs
 //  unsigned char str[30];      // for testing strings from Bluetooth
 
 	UART_Init(); // Initialize UART1 and UART0
   PortF_Init(); // Initilize for the three onboard LEDs
-	UART0_OutString((unsigned char *)">>> Welcome to Bluetooth Controlled LED App <<<\n\r");
-  Car_Dir_Init();
-	PWM_PB76_Init();
-  PWM_PB76_Duty(START_SPEED, START_SPEED);
+	Wheels_PWM_Init();
+	PLL_Init();
+	Dir_Init();
 	
   // Bluetooth Controlled LEDs
 	while(1) {
-    control_symbol = UART1_InChar();
-    UART0_OutChar(control_symbol);
-		UART0_OutChar(CR);
-    UART0_OutChar(LF);
-		
-		if(MODE == 0){	//DEMO MODE
 			LED = Red;
+			control_symbol = UART1_InChar();
 			switch (control_symbol){
 				case '8':	//Figure 8 and stop
-					Figure8();
+					if(MODE==1) Figure8();
 					break;
 				case 'C':	//One Circle and stop
 				case 'c':
-					Circle();
+					if(MODE==1)Circle();
 					break; 
 				case 'S':	//One Square and stop
 				case 's':
-					Square();
+					if(MODE==1){
+						Square();
+					}else{
+						Stop_Both_Wheels();
+					}
 					break; 
 				case 'Z': //Zigzag 4 segments and stop
 				case'z': 
-					Z();
+					if(MODE==1) Z();
 					break; 
+				case 'F':
+				case 'f'://Figure 8 and stop
+					if(MODE==2){
+						Start_Both_Wheels();
+						SetSpeed(speed,speed);
+						DIRECTION=FORWARD;
+					}
+					break;
+				case 'B':
+				case 'b'://One Circle and stop
+					if(MODE==2){
+						Start_Both_Wheels();
+						SetSpeed(speed,speed);
+						DIRECTION=BACKWARD;
+					}
+					break;
+				case 'L':
+				case 'l':
+					if(MODE==2){
+						Start_Both_Wheels();
+						SetSpeed(speed,speed);
+						DIRECTION=LEFTPIVOT;
+					}
+					break; 
+				case 'R':
+				case 'r':					//One Square and stop
+					if(MODE==2){
+						Start_Both_Wheels();
+						SetSpeed(speed,speed);
+						DIRECTION=RIGHTPIVOT;
+					}
+					break;
+				case 'U': //Zigzag 4 segments and stop
+				case'u':
+					if(MODE==2){
+						if(speed < PERIOD){
+							speed += 100;
+						}
+						SetSpeed(speed,speed);
+					}
+					break; 
+				case 'D': //Zigzag 4 segments and stop
+				case'd': 
+					if(MODE==2){
+						if(speed > 0){
+							speed -= 100;
+						}
+						SetSpeed(speed,speed);
+					}
+					break;
+				case 'X': //Zigzag 4 segments and stop
+				case'x': 
+					if(MODE==1){
+						MODE=2;
+					}else{
+						MODE=1;
+					}
+					break;
 				default:
 					break;
 			}
-		}else if(MODE == 1){  //FREE ROAM
-			LED = Blue;
-		}
 	}
 }
 
@@ -107,71 +166,69 @@ int main(void) {
 #define TIME_STEP 0.01
 
 void Figure8(){
-	float t;
+	SetSpeed(0,0);
+	Start_Both_Wheels();
 	DIRECTION=FORWARD;
-	PWM_PB76_Duty(0,0);
-	PWM0_ENABLE_R |= 0x03;
-	for(t=0; t < HALF_LOOP_DURATION; t+= TIME_STEP){
-		float SPEED_LEFT = 0.5 * (1 + sin(2*PI*t/HALF_LOOP_DURATION));
-		float SPEED_RIGHT = 1.0;
-		PWM_PB76_Duty(16000*SPEED_LEFT, 16000*SPEED_RIGHT);
-		Delay(0.01);
-	}
-	for(t=0; t < HALF_LOOP_DURATION; t+= TIME_STEP){
-		float SPEED_LEFT = 1.0;
-		float SPEED_RIGHT = 0.5 * (1 + sin(2*PI*t/HALF_LOOP_DURATION));
-		PWM_PB76_Duty(16000*SPEED_LEFT, 16000*SPEED_RIGHT);
-		Delay(0.01);
-	}
-	PWM_PB76_Duty(0,0);
-	PWM0_ENABLE_R &= ~0x03;
+	SetSpeed(PERIOD*0.5,PERIOD*0.2);
+	for (int i = 0; i < 26; i++) {Delay();}
+	SetSpeed(PERIOD*0.2,PERIOD*0.5);
+	for (int i = 0; i < 26; i++) {Delay();}
+	SetSpeed(0,0);
+	Stop_Both_Wheels();
 }	
 
 void Circle(){
-	PWM_PB76_Duty(0,0);
-	PWM0_ENABLE_R |= 0x03;
+	SetSpeed(0,0);
+	Start_Both_Wheels();
 	DIRECTION=FORWARD;
-	PWM_PB76_Duty(PERIOD*0.5,PERIOD*0.2);
-	Delay(1);
-	PWM_PB76_Duty(0,0);
-	PWM0_ENABLE_R &= ~0x03;
+	SetSpeed(PERIOD*0.5,PERIOD*0.2);
+	for (int i = 0; i < 26; i++) {Delay();}
+	SetSpeed(0,0);
+	Stop_Both_Wheels();
 }
 
 
 void Square(){
-	PWM0_ENABLE_R |= 0x03;
-	PWM_PB76_Duty(PERIOD*0.9,PERIOD*0.9);
+	Start_Both_Wheels();
 	for(int sides = 0; sides < 4; sides++){
+		SetSpeed(PERIOD*0.5,PERIOD*0.5);
 		DIRECTION=FORWARD;
-		Delay(1);
+		for (int i = 0; i < 10; i++) {Delay();}
+		SetSpeed(PERIOD*0.125,PERIOD*0.125);
 		DIRECTION=LEFTPIVOT;
-		Delay(1);
+		for (int i = 0; i < 10; i++) {Delay();}
 	}
-	PWM_PB76_Duty(0,0);
-	PWM0_ENABLE_R &= ~0x03;
+	SetSpeed(0,0);
+	Stop_Both_Wheels();
 }
 
 void Z(){
-		PWM0_ENABLE_R |= 0x03;
-	PWM_PB76_Duty(PERIOD*0.9,PERIOD*0.9);
+	Start_Both_Wheels();
+	SetSpeed(PERIOD*0.5,PERIOD*0.5);
 	for(int sides = 0; sides < 4; sides++){
+		SetSpeed(PERIOD*0.5,PERIOD*0.5);
 		DIRECTION=FORWARD;
-		Delay(1);
+		for (int i = 0; i < 10; i++) {Delay();}
 		if(sides%2){
+			SetSpeed(PERIOD*0.125,PERIOD*0.125);
 			DIRECTION=LEFTPIVOT;
+			for (int i = 0; i < 12; i++) {Delay();}
 		}else{
+			SetSpeed(PERIOD*0.125,PERIOD*0.125);
 			DIRECTION=RIGHTPIVOT;
+			for (int i = 0; i < 12; i++) {Delay();}
 		}
-		Delay(1);
 	}
-	PWM_PB76_Duty(0,0);
-	PWM0_ENABLE_R &= ~0x03;
+	SetSpeed(0,0);
+	Stop_Both_Wheels();
 }
 
-void Delay(float seconds){
-	unsigned long volatile time;
-  time = 727240*500/91;  // 0.25sec
-	time *= (unsigned long)(seconds/0.25);	//Scales up to seconds
+
+
+void Delay(void){
+	uint32_t volatile time;
+  time = 727240*20/91;  // 0.1sec for 16MHz
+//  time = 727240*100/91;  // 0.1sec for 80MHz
   while(time){
 		time--;
   }
@@ -246,8 +303,9 @@ void UART0_OutString(unsigned char *pt){
 // Input: none
 // Output: ASCII code for key typed
 unsigned char UART1_InChar(void){
-  while((UART1_FR_R&UART_FR_RXFE) != 0);
-  return((unsigned char)(UART1_DR_R&0xFF));
+  while(((UART1_FR_R&UART_FR_RXFE) != 0) & MODE_SW){}
+	MODE_SW = 1;
+  return((unsigned char)(UART1_DR_R&0xFF));	
 }
 
 // This function reads response from HC-05 Bluetooth module.
@@ -297,6 +355,15 @@ void GPIOPortF_Handler(void){
 	if(GPIO_PORTF_RIS_R & SW1)
 	{
 		GPIO_PORTF_ICR_R = SW1;
-		MODE ^= 0x1;
+		if(MODE==1){
+			MODE=2;
+			MODE_SW = 0;
+			LED = Red;
+		}else{
+			MODE=1;
+			MODE_SW = 0;
+			LED = Dark;
+			speed=100;
+		}
 	}
 }

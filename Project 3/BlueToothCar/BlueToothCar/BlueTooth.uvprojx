@@ -396,14 +396,14 @@
               <FilePath>.\BluetoothCar.c</FilePath>
             </File>
             <File>
-              <FileName>PWM.c</FileName>
+              <FileName>Motors.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\PWM.c</FilePath>
+              <FilePath>.\Motors.c</FilePath>
             </File>
             <File>
-              <FileName>GPIO.c</FileName>
+              <FileName>PLL.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\GPIO.c</FilePath>
+              <FilePath>.\PLL.c</FilePath>
             </File>
           </Files>
         </Group>
