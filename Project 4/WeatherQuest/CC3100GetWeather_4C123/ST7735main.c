@@ -96,9 +96,9 @@ Port A, SSI0 (PA2, PA3, PA5, PA6, PA7) sends data to Nokia5110 LCD
 #include "bmps.h"
 
 // To Do: replace the following three lines with your access point information
-#define SSID_NAME  "MinHeWiFi" /* Access point name to connect to */
+#define SSID_NAME  "Group4WiFi" /* Access point name to connect to */
 #define SEC_TYPE   SL_SEC_TYPE_WPA
-#define PASSKEY    "01234567"  /* Password in case of secure AP */ 
+#define PASSKEY    "MikuMikuBeam"  /* Password in case of secure AP */ 
 #define MAXLEN 100
 
 //------------UART_Init------------
@@ -122,6 +122,14 @@ void UART_Init(void){
   GPIO_PORTA_AMSEL_R &= ~0x03;          // disable analog functionality on PA
 }
 
+#define CR   0x0D
+#define LF   0x0A
+#define BS   0x08
+#define ESC  0x1B
+#define SP   0x20
+#define DEL  0x7F
+#define NULL 0
+
 //------------UART_OutString------------
 // Output String (NULL termination)
 // Input: pointer to a NULL-terminated string to be transferred
@@ -133,6 +141,61 @@ void UART_OutString(char *pt){
     pt++;
   }
 }
+
+//------------UART_InChar------------
+// Wait for new serial port input
+// Input: none
+// Output: ASCII code for key typed
+uint8_t UART_InChar(void){
+  while((UART0_FR_R&UART_FR_RXFE) != 0); // wait until the receiving FIFO is not empty
+  return((uint8_t)(UART0_DR_R&0xFF));
+}
+
+//------------UART_OutChar------------
+// Output 8-bit to serial port
+// Input: letter is an 8-bit ASCII character to be transferred
+// Output: none
+void UART_OutChar(uint8_t data){
+  while((UART0_FR_R&UART_FR_TXFF) != 0);
+  UART0_DR_R = data;
+}
+
+//------------UART_InString------------
+// Accepts ASCII characters from the serial port
+//    and adds them to a string until <enter> is typed
+//    or until max length of the string is reached.
+//    when max length is reach, no more input will be accepted
+//    the display will wait for the <enter> key to be pressed.
+// It echoes each character as it is inputted.
+// If a backspace is inputted, the string is modified
+//    and the backspace is echoed
+// terminates the string with a null character
+// uses busy-waiting synchronization on RDRF
+// Input: pointer to empty buffer, size of buffer
+// Output: Null terminated string
+void UART_InString(char *bufPt, uint16_t max) {
+int length=0;
+char character;
+  character = UART_InChar();
+  while(character != CR){
+    if(character == BS){ // back space
+      if(length){
+        bufPt--;
+        length--;
+        UART_OutChar(BS);
+      }
+    }
+    else if(length < max){
+      *bufPt = character;
+      bufPt++;
+      length++;
+      UART_OutChar(character);
+    }
+    character = UART_InChar();
+  }
+  *bufPt = 0; // adding null terminator to the end of the string.
+}
+
 
 #define MAX_RECV_BUFF_SIZE  1024
 #define MAX_SEND_BUFF_SIZE  512
@@ -231,7 +294,7 @@ void Crash(uint32_t time){
 // 1) change Austin Texas to your city
 // 2) metric(for celsius), imperial(for fahrenheit)
 // api.openweathermap.org/data/2.5/weather?q={city name},{state code}&appid={API key}
-#define REQUEST "GET /data/2.5/weather?q=Long Beach&APPID=7907b2abac2053aed180a74b9310b119&units=metric HTTP/1.1\r\nUser-Agent: Keil\r\nHost:api.openweathermap.org\r\nAccept: */*\r\n\r\n"
+#define REQUEST "GET /data/2.5/weather?q=Long Beach"
 // 1) go to http://openweathermap.org/appid#use 
 // 2) Register on the Sign up page
 // 3) get an API key (APPID) replace the 7907b2abac2053aed180a74b9310b119 with your APPID
@@ -268,8 +331,76 @@ int main(void){
   UART_OutString("Connected\n\r");
   ST7735_OutString("Connected\n\r");
 	
+	UART_OutString("\n\rWelcome to Weather Quest!");
+	
+	char requestStr[1000];
+	char inputStr[1000];
+	
   while(1){
-    strcpy(HostName,"api.openweathermap.org");
+		UART_OutString("\n\rSelect Query Mode:\n\r");
+		UART_OutString("	1. City Name\n\r");
+		UART_OutString("	2. City ID\n\r");
+		UART_OutString("	3. Geographic Coordinates\n\r");
+		UART_OutString("	4. Zip Code\n\r");
+		switch(UART_InChar()){
+			case '1':
+				//Get Input
+				UART_OutString("Enter City Name: ");
+				char temp[100];
+				UART_InString(temp, 100);
+				//Format spaces to %20
+				int j = 0;
+				for(int i = 0; i < 100; i++){
+					if(temp[i] == ' '){
+						inputStr[j++] = '%';
+						inputStr[j++] = '2';
+						inputStr[j++] = '0';
+					}else{
+						inputStr[j++] = temp[i];
+					}
+				}
+				//Combine Strings
+				strcpy(requestStr, "GET /data/2.5/weather?q=");
+				strcat(requestStr, inputStr);
+				strcat(requestStr, "&APPID=5c39d99aed5a1cd0d97917982d37ce53&units=imperial HTTP/1.1\r\nUser-Agent: Keil\r\nHost:api.openweathermap.org\r\nAccept: */*\r\n\r\n");
+				break;
+			case '2':
+				//Get Input
+				UART_OutString("Enter City ID: ");
+				UART_InString(inputStr, 100);
+				//Combine Strings
+				strcpy(requestStr, "GET /data/2.5/weather?id=");
+				strcat(requestStr, inputStr);
+				strcat(requestStr, "&APPID=5c39d99aed5a1cd0d97917982d37ce53&units=imperial HTTP/1.1\r\nUser-Agent: Keil\r\nHost:api.openweathermap.org\r\nAccept: */*\r\n\r\n");
+				break;
+			case '3':
+				//Get Input
+				UART_OutString("Enter Longitude: ");
+				char lon[64];
+				UART_InString(lon, 64);
+				UART_OutString("\n\rEnter Latitude: ");
+				char lat[64];
+				UART_InString(lat, 64);
+				//Combine Strings
+				strcpy(requestStr, "GET /data/2.5/weather?lon=");
+				strcat(requestStr, lat);
+				strcat(requestStr, "&lat=");
+				strcat(requestStr, lon);
+				strcat(requestStr, "&APPID=5c39d99aed5a1cd0d97917982d37ce53&units=imperial HTTP/1.1\r\nUser-Agent: Keil\r\nHost:api.openweathermap.org\r\nAccept: */*\r\n\r\n");
+				break;
+			case '4':
+				//Get Input
+				UART_OutString("Enter Zip Code: ");
+				UART_InString(inputStr, 100);
+				//Combine Strings
+				strcpy(requestStr, "GET /data/2.5/weather?zip=");
+				strcat(requestStr, inputStr);
+				strcat(requestStr, "&APPID=5c39d99aed5a1cd0d97917982d37ce53&units=imperial HTTP/1.1\r\nUser-Agent: Keil\r\nHost:api.openweathermap.org\r\nAccept: */*\r\n\r\n");
+				break;
+		}
+		
+		//Query Server and Print
+		strcpy(HostName,"api.openweathermap.org");
     retVal = sl_NetAppDnsGetHostByName(HostName,
              strlen(HostName),&DestinationIP, SL_AF_INET);
     if(retVal == 0){
@@ -282,16 +413,20 @@ int main(void){
         retVal = sl_Connect(SockID, ( SlSockAddr_t *)&Addr, ASize);
       }
       if((SockID >= 0)&&(retVal >= 0)){
-        strcpy(SendBuff,REQUEST); 
+        strcpy(SendBuff,requestStr); 
         sl_Send(SockID, SendBuff, strlen(SendBuff), 0);// Send the HTTP GET 
         sl_Recv(SockID, Recvbuff, MAX_RECV_BUFF_SIZE, 0);// Receive response 
         sl_Close(SockID);
         LED_GreenOn();
         UART_OutString("\r\n\r\n");
         UART_OutString(Recvbuff);  UART_OutString("\r\n");
+			}
+		}
+	}
+
+		/*
+
 				
-				// process received weather information
-				/* find ticker name in response*/
 				pt = strstr(Recvbuff, "\"name\"");
 				i = 0; 
 				if( NULL != pt ){
@@ -302,8 +437,6 @@ int main(void){
 					}
 				}
 				City[i] = 0;
-
-				/* find Temperature Value in response */
 				pt = strstr(Recvbuff, "\"temp\"");
 				i = 0; 
 				if( NULL != pt ){
@@ -315,8 +448,6 @@ int main(void){
 					}
 				}
 				Temperature[i] = 0;
-
-				/* find weather in response */
 				pt = strstr(Recvbuff, "\"description\"");
 				i = 0; 
 				if( NULL != pt ){
@@ -343,6 +474,7 @@ int main(void){
     while(Board_Input()==0){}; // wait for touch
     LED_GreenOff();
   }
+*/
 }
 
 /*!
