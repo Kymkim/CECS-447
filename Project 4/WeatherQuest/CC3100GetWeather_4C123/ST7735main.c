@@ -288,6 +288,7 @@ void Crash(uint32_t time){
     LED_RedToggle();
   }
 }
+
 /*
  * Application's entry point
  */
@@ -306,8 +307,14 @@ int main(void){
 	SlSockAddrIn_t  Addr;
 	char *pt = NULL;
 	char City[MAXLEN];
+	char Temperature_Min[MAXLEN];
+	char Temperature_Max[MAXLEN];
 	char Temperature[MAXLEN];
 	char Weather[MAXLEN];
+	char Weather_Type[MAXLEN];
+	char Humidity[MAXLEN];
+	char Wind_Speed[MAXLEN];
+	char Clouds[MAXLEN];
 	uint8_t i;
 
   initClk();        // PLL 50 MHz
@@ -336,12 +343,18 @@ int main(void){
 	char requestStr[1000];
 	char inputStr[1000];
 	
+	UART_OutString("\n\rSelect Query Mode:\n\r");
+	UART_OutString("	1. City Name\n\r");
+	UART_OutString("	2. City ID\n\r");
+	UART_OutString("	3. Geographic Coordinates\n\r");
+	UART_OutString("	4. Zip Code\n\r");
+	
+	int ANIM_IDX = 0;
+	int icon_draw_x = ST7735_TFTWIDTH-32-8;
+	int icon_draw_y = 64-8+2;
+	int sizeCity = 2;
+
   while(1){
-		UART_OutString("\n\rSelect Query Mode:\n\r");
-		UART_OutString("	1. City Name\n\r");
-		UART_OutString("	2. City ID\n\r");
-		UART_OutString("	3. Geographic Coordinates\n\r");
-		UART_OutString("	4. Zip Code\n\r");
 		switch(UART_InChar()){
 			case '1':
 				//Get Input
@@ -397,9 +410,13 @@ int main(void){
 				strcat(requestStr, inputStr);
 				strcat(requestStr, "&APPID=5c39d99aed5a1cd0d97917982d37ce53&units=imperial HTTP/1.1\r\nUser-Agent: Keil\r\nHost:api.openweathermap.org\r\nAccept: */*\r\n\r\n");
 				break;
+			default:
+				UART_OutString("Invalid Request...");
+				break;
 		}
 		
 		//Query Server and Print
+		strcpy(Recvbuff,"");
 		strcpy(HostName,"api.openweathermap.org");
     retVal = sl_NetAppDnsGetHostByName(HostName,
              strlen(HostName),&DestinationIP, SL_AF_INET);
@@ -422,6 +439,237 @@ int main(void){
         UART_OutString(Recvbuff);  UART_OutString("\r\n");
 			}
 		}
+		
+		UART_OutString("\r\nFor debugging purposes...");
+		pt = strstr(Recvbuff, "\"name\"");
+		i = 0; 
+		if( NULL != pt ){
+			pt = pt + 8; // skip over "name":"
+			while((i<MAXLEN)&&(*pt)&&(*pt!='\"')){
+				City[i] = *pt; // copy into City string
+				pt++; 
+				i++;    
+			}
+		}
+		City[i] = 0;
+		UART_OutString("\r\nCity: ");
+		UART_OutString(City);
+		
+		pt = strstr(Recvbuff, "\"temp_min\"");
+		i = 0; 
+		if( NULL != pt ){
+			pt = pt + 11; // skip over "temp":
+			while((i<MAXLEN)&&(*pt)&&(*pt!=',')){
+				Temperature_Min[i] = *pt; // copy into Temperature string
+				pt++; 
+				i++;    
+			}
+		}
+		Temperature_Min[i] = 0;
+		UART_OutString("\r\nTemperature Minimum: ");
+		UART_OutString(Temperature_Min);
+		
+		pt = strstr(Recvbuff, "\"temp_max\"");
+		i = 0; 
+		if( NULL != pt ){
+			pt = pt + 11; // skip over "temp":
+			while((i<MAXLEN)&&(*pt)&&(*pt!=',')){
+				Temperature_Max[i] = *pt; // copy into Temperature string
+				pt++; 
+				i++;    
+			}
+		}
+		Temperature_Max[i] = 0;
+		UART_OutString("\r\nTemperature Maximum: ");
+		UART_OutString(Temperature_Max);
+		
+		pt = strstr(Recvbuff, "\"temp\"");
+		i = 0; 
+		if( NULL != pt ){
+			pt = pt + 7; // skip over "temp":
+			while((i<MAXLEN)&&(*pt)&&(*pt!=',')){
+				Temperature[i] = *pt; // copy into Temperature string
+				pt++; 
+				i++;    
+			}
+		}
+		Temperature[i] = 0;
+		UART_OutString("\r\nTemperature: ");
+		UART_OutString(Temperature);
+		
+		pt = strstr(Recvbuff, "\"main\"");
+		i = 0; 
+		if( NULL != pt ){
+			pt = pt + 8; // skip over "main":"
+			while((i<MAXLEN)&&(*pt)&&(*pt!='\"')){
+				Weather[i] = *pt; // copy into weather string
+				pt++; 
+				i++;    
+			}
+		}
+		Weather[i] = 0; 
+		UART_OutString("\r\nWeather: ");
+		UART_OutString(Weather);
+		
+		pt = strstr(Recvbuff, "\"id\"");
+		i = 0; 
+		if( NULL != pt ){
+			pt = pt + 5; // skip over "id":"
+			while((i<MAXLEN)&&(*pt)&&(*pt!=',')){
+				Weather_Type[i] = *pt; // copy into weather string
+				pt++; 
+				i++;    
+			}
+		}
+		Weather_Type[i] = 0;
+		UART_OutString("\r\nWeather Type: ");
+		UART_OutString(Weather_Type);
+		
+		pt = strstr(Recvbuff, "\"humidity\"");
+		i = 0; 
+		if( NULL != pt ){
+			pt = pt +11; // skip over "humidity":"
+			while((i<MAXLEN)&&(*pt)&&(*pt!=',')){
+				Humidity[i] = *pt; // copy into weather string
+				pt++; 
+				i++;    
+			}
+		}
+		Humidity[i] = 0;
+		UART_OutString("\r\nHumidity: ");
+		UART_OutString(Humidity);
+		
+		pt = strstr(Recvbuff, "\"wind\"");
+		i = 0; 
+		if( NULL != pt ){
+			pt = pt + 16; // skip over "wind":{"speed":
+			while((i<MAXLEN)&&(*pt)&&(*pt!=',')){
+				Wind_Speed[i] = *pt; // copy into weather string
+				pt++; 
+				i++;    
+			}
+		}
+		Wind_Speed[i] = 0;
+		UART_OutString("\r\nWind Speed: ");
+		UART_OutString(Wind_Speed);
+		
+		pt = strstr(Recvbuff, "\"clouds\"");
+		i = 0; 
+		if( NULL != pt ){
+			pt = pt + 16; // skip over "clouds":{ "all": 
+			while((i<MAXLEN)&&(*pt)&&(*pt!='}')){
+				Clouds[i] = *pt; 
+				pt++; 
+				i++;    
+			}
+		}
+		Clouds[i] = 0;
+		UART_OutString("\r\nClouds: ");
+		UART_OutString(Clouds);
+		
+		
+		
+		
+		//Change Bitmap to display based on weather type
+		
+		UART_OutString("\n\rSelect Query Mode:\n\r");
+		UART_OutString("	1. City Name\n\r");
+		UART_OutString("	2. City ID\n\r");
+		UART_OutString("	3. Geographic Coordinates\n\r");
+		UART_OutString("	4. Zip Code\n\r");
+		
+		char temp[100];
+		
+		ST7735_FillScreen(ST7735_BLACK);
+		ST7735_FillRect(0,0,ST7735_TFTWIDTH,(ST7735_TFTHEIGHT-(ST7735_TFTHEIGHT/4)-4),ST7735_WHITE);
+		ST7735_FillRect(2,2,ST7735_TFTWIDTH-4,(ST7735_TFTHEIGHT-(ST7735_TFTHEIGHT/4)-4-4),ST7735_BLACK);
+		ST7735_FillRect(0,(ST7735_TFTHEIGHT-(ST7735_TFTHEIGHT/4)-4),ST7735_TFTWIDTH,ST7735_TFTHEIGHT,ST7735_WHITE);
+		ST7735_FillRect(2,(ST7735_TFTHEIGHT-(ST7735_TFTHEIGHT/4)-4),ST7735_TFTWIDTH-4,(ST7735_TFTHEIGHT/4)+2,ST7735_MAGENTA);
+		
+		//Print City
+		if(strlen(City) <= 10){
+			ST7735_DrawString(0,0,City,ST7735_CYAN,ST7735_BLACK,2);
+		}else{
+			ST7735_DrawString(0,0,City,ST7735_CYAN,ST7735_BLACK,1);
+		}
+		
+		//Print Min Temp
+		strcpy(temp,"Min: ");
+		strcat(temp,Temperature_Min);
+		strcat(temp,"F");
+		ST7735_DrawString(1,3,temp,ST7735_GREEN,ST7735_BLACK,1);
+		
+		//Print Max Temp
+		strcpy(temp,"Max: ");
+		strcat(temp,Temperature_Max);
+		strcat(temp,"F");
+		ST7735_DrawString(1,4,temp,ST7735_GREEN,ST7735_BLACK,1);
+		
+		//Print Min Temp
+		strcpy(temp,"Avg: ");
+		strcat(temp,Temperature_Min);
+		strcat(temp,"F");
+		ST7735_DrawString(1,5,temp,ST7735_GREEN,ST7735_BLACK,1);
+		
+		//Print Humidity
+		strcpy(temp,"Humidity: ");
+		strcat(temp,Humidity);
+		strcat(temp,"%");
+		ST7735_DrawString(1,7,temp,ST7735_YELLOW,ST7735_BLACK,1);
+		
+		//Print Wind Speed
+		strcpy(temp,"Wind Spd: ");
+		strcat(temp,Wind_Speed);
+		strcat(temp,"mph");
+		ST7735_DrawString(1,9,temp,ST7735_YELLOW,ST7735_BLACK,1);
+		
+		//Print Cloudiness
+		strcpy(temp,"Cloudiness: ");
+		strcat(temp,Clouds);
+		strcat(temp,"%");
+		ST7735_DrawString(1,8,temp,ST7735_YELLOW,ST7735_BLACK,1);
+
+		//Print Weather
+		ST7735_DrawString(0,11,"Weather: ",ST7735_WHITE, ST7735_BLACK,1);
+		ST7735_DrawString(3,13,Weather,ST7735_WHITE,ST7735_MAGENTA,2);
+
+		while((UART0_FR_R&UART_FR_RXFE) != 0){
+			if(ANIM_IDX%2){
+				ST7735_DrawString(1,13," ",ST7735_WHITE,ST7735_MAGENTA,2);
+			}else{
+				ST7735_DrawString(1,13,">",ST7735_WHITE,ST7735_MAGENTA,2);
+			}
+			switch(Weather_Type[0]){
+				case '2':
+					ST7735_DrawBitmap(icon_draw_x, icon_draw_y,rainy_bmp[ANIM_IDX],32,32);
+					break;
+				case '3':
+					ST7735_DrawBitmap(icon_draw_x, icon_draw_y,rainy_bmp[ANIM_IDX],32,32);
+					break;
+				case '5':
+					ST7735_DrawBitmap(icon_draw_x, icon_draw_y,rainy_bmp[ANIM_IDX],32,32);
+					break;
+				case '6':
+					ST7735_DrawBitmap(icon_draw_x, icon_draw_y,rainy_bmp[ANIM_IDX],32,32);
+					break;
+				case '7':
+					ST7735_DrawBitmap(icon_draw_x, icon_draw_y,cloudy_bmp[ANIM_IDX],32,32);
+					break;
+				case '8':
+					switch(Weather_Type[2]){
+						case '0':
+							ST7735_DrawBitmap(icon_draw_x, icon_draw_y,clear_bmp[ANIM_IDX],32,32);
+							break;
+						default:
+							ST7735_DrawBitmap(icon_draw_x, icon_draw_y,cloudy_bmp[ANIM_IDX],32,32);
+							break;
+					}
+					break;
+			}
+			ANIM_IDX = (ANIM_IDX+1)%2;
+			Delay(300);
+		};
+		
 	}
 
 		/*

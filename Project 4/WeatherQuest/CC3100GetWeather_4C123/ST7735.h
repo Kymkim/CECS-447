@@ -112,6 +112,7 @@ enum initRFlags{
 #define ST7735_MAGENTA 0xF81F
 #define ST7735_YELLOW  0x07FF
 #define ST7735_WHITE   0xFFFF
+#define ST7735_GREY 	 0x8410
 
 //------------ST7735_InitB------------
 // Initialization for ST7735B screens.
@@ -241,8 +242,7 @@ void ST7735_DrawBitmap(int16_t x, int16_t y, const uint16_t *image, int16_t w, i
 //        bgColor   16-bit color of the background
 //        size      number of pixels per character pixel (e.g. size==2 prints each pixel of font as 2x2 square)
 // Output: none
-void ST7735_DrawCharS(int16_t x, int16_t y, char c, int16_t textColor, int16_t bgColor, uint8_t size);
-
+void ST7735_DrawCharS(int16_t x, int16_t y, char c, int16_t textColor, int16_t bgColor, uint8_t size, uint8_t pt_size, uint8_t b_size, const uint8_t *font_type);
 //------------ST7735_DrawChar------------
 // Advanced character draw function.  This is similar to the function
 // from Adafruit_GFX.c but adapted for this processor.  However, this
@@ -268,7 +268,7 @@ void ST7735_DrawChar(int16_t x, int16_t y, char c, int16_t textColor, int16_t bg
 //        textColor 16-bit color of the characters
 // bgColor is Black and size is 1
 // Output: number of characters printed
-uint32_t ST7735_DrawString(uint16_t x, uint16_t y, char *pt, int16_t textColor);;
+uint32_t ST7735_DrawString(uint16_t x, uint16_t y, char *pt, int16_t textColor, uint16_t bg_color, uint8_t size);
 
 
 

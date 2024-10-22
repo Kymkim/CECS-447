@@ -444,6 +444,7 @@ const unsigned short rainy[][1024] = {
 void DelayWait10ms(uint32_t n);
 void PortF_Init(void);
 
+
 uint16_t CLEAR_BG  	=	((31 << 11) | (63 << 5) | 31);
 uint16_t CLEAR_FG 	=	((0  << 11) | (0  << 5) | 0);
 uint16_t CLOUDY_BG	=	((19 << 11) | (39 << 5) | 19);
